@@ -15,7 +15,6 @@ public class autonomousStart1MatB extends LinearOpMode {
     public void runOpMode() throws InterruptedException {
 
         Pose2d myPose = new Pose2d(-62, -50, Math.toRadians(0));
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         Trajectory trajectoryA1Red = drive.trajectoryBuilder(

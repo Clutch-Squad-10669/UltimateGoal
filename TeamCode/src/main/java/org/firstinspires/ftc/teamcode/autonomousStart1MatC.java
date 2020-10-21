@@ -20,8 +20,8 @@ public class autonomousStart1MatC extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        //This is our trajectory. It says that from "myPose" we go to the C target zone,
-        //then we go to S position and, finally, we park on the white line.
+        /* This is our trajectory. It says that from "myPose" we go to the C target zone,
+        then we go to S position and, finally, we park on the white line. */
         Trajectory trajectoryC1Red = drive.trajectoryBuilder(
                 new Pose2d())
                 .splineTo(new Vector2d(54, -60), Math.toRadians(0))
@@ -32,12 +32,11 @@ public class autonomousStart1MatC extends LinearOpMode {
         waitForStart();
 
         if (isStopRequested()) return;
+
         //This simply tells the robot to follow the trajectory above
         drive.followTrajectory(trajectoryC1Red);
 
-        //This saves the coordinates in another program so that the robot can recognize where the coordinates
-        //are when it sees the coordinates again
-        PoseStorage.currentPose = drive.getPoseEstimate();
+           PoseStorage.currentPose = drive.getPoseEstimate();
 
     }
 }

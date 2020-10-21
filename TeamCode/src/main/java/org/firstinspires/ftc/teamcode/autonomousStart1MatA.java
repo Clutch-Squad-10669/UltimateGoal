@@ -43,7 +43,7 @@ public class autonomousStart1MatA extends LinearOpMode
         drive.followTrajectory(trajectoryA1Red);
 
         /*This saves the coordinates in another program so that the robot can recognize where the coordinates
-        are whes the coordinates again */
+        are when it sees the coordinates again */
         PoseStorage.currentPose = drive.getPoseEstimate();
 
 

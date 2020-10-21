@@ -24,11 +24,9 @@ public class autonomousStart1MatB extends LinearOpMode {
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // This is the beginning of our trajectory
-
         Trajectory trajectoryB1Red = drive.trajectoryBuilder(
 
                 // Here are the codes that tell the robot to spline to a certain point, and turn a certain angle
-
                 new Pose2d())
                 .splineTo(new Vector2d(34, -35), Math.toRadians(0))
                 .splineTo(new Vector2d(-23, -36), Math.toRadians(anglePheta))

@@ -19,10 +19,10 @@ public class autonomousStart3MatC extends LinearOpMode {
 
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Trajectory trajectoryA1Red = drive.trajectoryBuilder(
+        Trajectory trajectoryC3Blue = drive.trajectoryBuilder(
                 new Pose2d())
                 .splineTo(new Vector2d(54,60), Math.toRadians(0))
-                .splineTo(new Vector2d(-23,36), Math.toRadians(anglePheta))
+                .splineTo(new Vector2d(-23,36), Math.toRadians(-anglePheta))
                 .splineTo(new Vector2d(10,36), Math.toRadians(0))
                 .build();
 
@@ -30,7 +30,7 @@ public class autonomousStart3MatC extends LinearOpMode {
 
         if(isStopRequested()) return;
 
-        drive.followTrajectory(trajectoryA1Red);
+        drive.followTrajectory(trajectoryC3Blue);
 
         PoseStorage.currentPose = drive.getPoseEstimate();
 

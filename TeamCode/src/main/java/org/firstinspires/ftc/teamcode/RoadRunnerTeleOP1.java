@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
+import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable;
 
@@ -15,13 +16,15 @@ import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelabl
 @TeleOp(name="ShauryaTeleOp1")
 public class RoadRunnerTeleOP1 extends LinearOpMode {
 
+    pointCenteredTeleOP pointcentered = new pointCenteredTeleOP();
+
     //finds the exact angle we need to turn to face the powershots
     final double anglePheta = 90 - (Math.atan((105/24)));
 
     //creates two states, driver control and automatic control
     enum State {
         DRIVER_CONTROL,
-        AUTOMATIC_CONTROL
+        AUTOMATIC_CONTROL;
     }
 
     //right now we set our state to driver control
@@ -113,9 +116,11 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
                     if (!drive.isBusy()) {
                         currentState = State.DRIVER_CONTROL;
                         break;
+
                 }
+            }
         }
     }
 }
-}
+
 

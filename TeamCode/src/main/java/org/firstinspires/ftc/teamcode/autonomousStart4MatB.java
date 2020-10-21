@@ -18,10 +18,10 @@ public class autonomousStart4MatB extends LinearOpMode {
         Pose2d myPose = new Pose2d(-62, 50, Math.toRadians(0));
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
-        Trajectory trajectoryA1Red = drive.trajectoryBuilder(
+        Trajectory trajectoryB4Blue = drive.trajectoryBuilder(
                 new Pose2d())
                 .splineTo(new Vector2d(34, 35), Math.toRadians(0))
-                .splineTo(new Vector2d(-23, 36), Math.toRadians(anglePheta))
+                .splineTo(new Vector2d(-23, 36), Math.toRadians(-anglePheta))
                 .splineTo(new Vector2d(10, 36), Math.toRadians(0))
                 .build();
 
@@ -29,7 +29,7 @@ public class autonomousStart4MatB extends LinearOpMode {
 
         if (isStopRequested()) return;
 
-        drive.followTrajectory(trajectoryA1Red);
+        drive.followTrajectory(trajectoryB4Blue);
 
         PoseStorage.currentPose = drive.getPoseEstimate();
 

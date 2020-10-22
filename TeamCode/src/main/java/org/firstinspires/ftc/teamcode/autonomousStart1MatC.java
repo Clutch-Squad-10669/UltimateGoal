@@ -8,8 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 
-public class autonomousStart1MatC extends LinearOpMode {
-        //This line measures how much the robot has to turn to face the power shot targets.
+public class autonomousStart1MatC extends LinearOpMode {// This line measures how much the robot has to turn to face the power shot targets.
     double anglePheta = 90 - (Math.atan((105 / 24)));
 
     @Override
@@ -36,7 +35,10 @@ public class autonomousStart1MatC extends LinearOpMode {
         //This simply tells the robot to follow the trajectory above
         drive.followTrajectory(trajectoryC1Red);
 
-           PoseStorage.currentPose = drive.getPoseEstimate();
+        /* This saves the coordinates in another program so that the robot can recognize where the coordinates
+        are when it sees them again */
+        PoseStorage.currentPose = drive.getPoseEstimate();
+
 
     }
 }

@@ -18,16 +18,15 @@ public class autonomousStart1MatB extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
 
-        // Over here, we are creating a pose. The starting position is (-62, -50).
-
+        // Here, we are creating a pose. The starting position is (-62, -50).
         Pose2d myPose = new Pose2d(-62, -50, Math.toRadians(0));
+
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         // This is the beginning of our trajectory
         Trajectory trajectoryB1Red = drive.trajectoryBuilder(
-
-                // Here are the codes that tell the robot to spline to a certain point, and turn a certain angle
                 new Pose2d())
+                // These are the codes that tell the robot to spline to a certain point and specific direction
                 .splineTo(new Vector2d(34, -35), Math.toRadians(0))
                 .splineTo(new Vector2d(-23, -36), Math.toRadians(anglePheta))
                 .splineTo(new Vector2d(10, -36), Math.toRadians(0))
@@ -39,8 +38,11 @@ public class autonomousStart1MatB extends LinearOpMode {
 
         if (isStopRequested()) return;
 
+        // This simply tells the robot to follow the trajectory above
         drive.followTrajectory(trajectoryB1Red);
 
+        /* This saves the coordinates in another program so that the robot can recognize where the coordinates
+        it sees them again */
         PoseStorage.currentPose = drive.getPoseEstimate();
 
     }

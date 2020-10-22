@@ -12,18 +12,18 @@ import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 @Autonomous (name = "RoadRunnerAutonomous1")
 public class autonomousStart1MatA extends LinearOpMode
 {
-    /*
-    calculates the angle the robot needs to turn to face the Power Shot targets
-    from Position S, the robot would need to turn a certain amount of degrees to face the Power Shot target
-    using trigonometry, we were able to find that angle
-    wherever the robot is facing, after calling anglePheta, the robot will turn to face the targets
-     */
+    /* calculates the angle the robot needs to turn to face the Power Shot targets
+    from Position S, the robot would need to turn a certain amount of degrees to face
+    the Power Shot target using trigonometry, we were able to find that angle wherever
+    the robot is facing, after calling anglePheta, the robot will turn to face the targets */
     double anglePheta = 90 - (Math.atan((105/24)));
 
     @Override
     public void runOpMode() throws InterruptedException {
+
         //the starting position of the robot: S Position
         Pose2d myPose = new Pose2d(-62, -50, Math.toRadians(0));
+
         //gets SampleMacanumDrive from the hardwardMap
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 

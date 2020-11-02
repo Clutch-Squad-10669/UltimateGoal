@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 
-@Autonomous (name = "RoadRunnerAutonomous1")
+@Autonomous (name = "RoadRunnerAutonomous1A")
 public class autonomousStart1MatA extends LinearOpMode
 {
     /* calculates the angle the robot needs to turn to face the Power Shot targets

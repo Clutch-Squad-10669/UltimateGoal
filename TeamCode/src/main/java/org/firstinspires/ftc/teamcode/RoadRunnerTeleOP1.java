@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -16,7 +17,9 @@ import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelabl
 @TeleOp(name="ShauryaTeleOp1")
 public class RoadRunnerTeleOP1 extends LinearOpMode {
 
-    pointCenteredTeleOP pointcentered = new pointCenteredTeleOP();
+    //initialize the shooter's motor and the intake motor
+    Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
+    Motor intakeMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.RPM_1620);
 
     //finds the exact angle we need to turn to face the powershots
     final double anglePheta = 90 - (Math.atan((105/24)));
@@ -32,15 +35,41 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
 
     //we set the target vector to -23, -26 which are the coordinates of the ring
     Vector2d targetAVector = new Vector2d(-23, -36);
+    Vector2d targetBVector = new Vector2d(-23, -36);
 
     //we set the heading to anglePheta, which is around 12.88
     double targetAHeading = Math.toRadians(anglePheta);
+    double targetBHeading = Math.toRadians(anglePheta + 10);
+
 
     //declare @override
     @Override
     public void runOpMode() throws InterruptedException {
         // Initialize custom cancelable SampleMecanumDrive class
         SampleMecanumDriveCancelable drive = new SampleMecanumDriveCancelable(hardwareMap);
+
+        //we use PID to maintain a constant velocity on the shooter, and normally drive the intake (this uses FTClib)
+        //initialize runmode
+        shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
+        shooterMotor.setRunMode(Motor.RunMode.RawPower);
+
+            //sets coeffs for PID motor 1
+            shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
+            double[] coeffs = shooterMotor.getVeloCoefficients();
+            double kP = coeffs[0];
+            double kI = coeffs[1];
+            double kD = coeffs[2];
+
+            // set and get the feedforward coefficients
+            shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
+            double[] ffCoeffs = shooterMotor.getFeedforwardCoefficients();
+            double kS = ffCoeffs[0];
+            double kV = ffCoeffs[1];
+
+            //sets powers (temporary)
+            shooterMotor.set(1.0);
+            intakeMotor.set(1.0);
+
 
         // We want to turn off velocity control for teleop
         // Velocity control per wheel is not necessary outside of motion profiled auto
@@ -88,6 +117,18 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
                             )
                     );
 
+                    //right bumper is to turn on intake/shooter
+                    if (gamepad1.right_bumper) {
+                        shooterMotor.set(1.0);
+                        intakeMotor.set(1.0);
+                    }
+
+                    //left bumper is to turn it off
+                    if (gamepad1.left_bumper) {
+                        shooterMotor.set(0.0);
+                        intakeMotor.set(0.0);
+                    }
+
                     //if the a button is pressed, then we convert to auto
                     if (gamepad1.a) {
                         // If the A button is pressed on gamepad1, we generate a splineTo()
@@ -102,6 +143,22 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
 
                         currentState = State.AUTOMATIC_CONTROL;
                     }
+
+                    //same thing as a, just for high goal
+                    if (gamepad1.b) {
+                        // If the B button is pressed on gamepad1, we generate a splineTo()
+                        // trajectory on the fly and follow it
+                        // We switch the state to AUTOMATIC_CONTROL
+
+                        Trajectory traj2 = drive.trajectoryBuilder(poseEstimate)
+                                .splineTo(targetBVector, targetBHeading)
+                                .build();
+
+                        drive.followTrajectoryAsync(traj2);
+
+                        currentState = State.AUTOMATIC_CONTROL;
+                    }
+
                     break;
 
                 //if something happens during auto, then this breaks us out of it

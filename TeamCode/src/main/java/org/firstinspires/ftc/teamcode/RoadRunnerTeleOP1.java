@@ -19,7 +19,7 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
 
     //initialize the shooter's motor and the intake motor
     Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
-    Motor intakeMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.RPM_1620);
+    Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
 
     //finds the exact angle we need to turn to face the powershots
     final double anglePheta = 90 - (Math.atan((105/24)));

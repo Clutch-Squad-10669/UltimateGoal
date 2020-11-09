@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 
 @Autonomous(name = "autonomousStart1MatC")
-public class autonomousStart1MatC extends LinearOpMode {// This line measures how much the robot has to turn to face the power shot targets.
+public class autonomousStart1MatC extends LinearOpMode {
 
     //create shooterMotor and intakeMotor motor objects (bare)
     Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);

@@ -15,10 +15,29 @@ import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 @Autonomous(name = "RoadRunnerAutonomous1A")
 public class autonomousStart1MatA extends LinearOpMode {
 
-        double anglePheta = 90 - (Math.atan((105 / 24)));
+    double anglePheta = 90 - (Math.atan((105 / 24)));
+
+    Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
+    Motor intakeMotor = new Motor(hardwareMap,"motor2", Motor.GoBILDA.BARE);
 
         @Override
-        public void runOpMode() throws InterruptedException  {
+        public void runOpMode() throws InterruptedException {
+
+            shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
+            intakeMotor.setRunMode(Motor.RunMode.RawPower);
+
+                shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
+                double[] coeffs = shooterMotor.getVeloCoefficients();
+                double kP = coeffs[0];
+                double kI = coeffs[1];
+                double kD = coeffs[2];
+
+                shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
+                double[] ffCoeffs = shooterMotor.getFeedforwardCoefficients();
+                double kS = ffCoeffs[0];
+                double kV = ffCoeffs[1];
+
+
 
             //This tells the robot where it is on the mat to begin with
             Pose2d myPose = new Pose2d(-62, -50, Math.toRadians(0));
@@ -71,6 +90,9 @@ public class autonomousStart1MatA extends LinearOpMode {
 
             if (isStopRequested()) return;
 
+            shooterMotor.set(1.0);
+            intakeMotor.set(1.0);
+
             //This simply tells the robot to follow the trajectory above
             drive.followTrajectory(trajectoryC1Red1);
             drive.followTrajectory(trajectoryC1Red2);
@@ -83,7 +105,8 @@ public class autonomousStart1MatA extends LinearOpMode {
         are when it sees them again */
             PoseStorage.currentPose = drive.getPoseEstimate();
 
-
+            shooterMotor.set(0.0);
+            intakeMotor.set(0.0);
 
 
     }

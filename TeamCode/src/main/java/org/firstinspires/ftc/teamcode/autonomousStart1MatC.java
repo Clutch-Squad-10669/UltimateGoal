@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,6 +17,9 @@ public class autonomousStart1MatC extends LinearOpMode {// This line measures ho
     //create shooterMotor and intakeMotor motor objects (bare)
     Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
     Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
+
+    //create the servo for the wobble
+    SimpleServo armServo = new SimpleServo(hardwareMap, "servo1");
 
     double anglePheta = 90 - (Math.atan((105 / 24)));
 
@@ -93,11 +97,22 @@ public class autonomousStart1MatC extends LinearOpMode {// This line measures ho
         intakeMotor.set(1.0);
 
         //This simply tells the robot to follow the trajectory above
+
+        armServo.turnToAngle(1);//pick it up
+        //top right
         drive.followTrajectory(trajectoryC1Red1);
+        armServo.turnToAngle(0);//drop it off
+        //pick up rings
         drive.followTrajectory(trajectoryC1Red2);
+        //continue
         drive.followTrajectory(trajectoryC1Red3);
+        //pick up second wobble goal, to powershots
         drive.followTrajectory(trajectoryC1Red4);
+        armServo.turnToAngle(1);//pick it up
+        //back to mat c drop it off
         drive.followTrajectory(trajectoryC1Red5);
+        armServo.turnToAngle(0);//drop it off
+        //park on line
         drive.followTrajectory(trajectoryC1Red6);
 
         /* This saves the coordinates in another program so that the robot can recognize where the coordinates

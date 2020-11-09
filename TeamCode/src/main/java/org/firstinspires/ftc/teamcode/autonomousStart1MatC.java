@@ -3,17 +3,41 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
-import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 
+@Autonomous(name = "autonomousStart1MatC")
 public class autonomousStart1MatC extends LinearOpMode {// This line measures how much the robot has to turn to face the power shot targets.
+
+    //create shooterMotor and intakeMotor motor objects (bare)
+    Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
+    Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
+
     double anglePheta = 90 - (Math.atan((105 / 24)));
 
     @Override
     public void runOpMode() throws InterruptedException  {
+
+        //set runMode (velo for shooter, raw for intake)
+        shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
+        intakeMotor.setRunMode(Motor.RunMode.RawPower);
+
+            //set coeffs
+            shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
+            double[] coeffs = shooterMotor.getVeloCoefficients();
+            double kP = coeffs[0];
+            double kI = coeffs[1];
+            double kD = coeffs[2];
+
+            // set and get the feedforward coefficients
+            shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
+            double[] ffCoeffs = shooterMotor.getFeedforwardCoefficients();
+            double kS = ffCoeffs[0];
+            double kV = ffCoeffs[1];
 
         //This tells the robot where it is on the mat to begin with
         Pose2d myPose = new Pose2d(-62, -50, Math.toRadians(0));
@@ -64,6 +88,10 @@ public class autonomousStart1MatC extends LinearOpMode {// This line measures ho
 
         if (isStopRequested()) return;
 
+        //sets powers
+        shooterMotor.set(1.0);
+        intakeMotor.set(1.0);
+
         //This simply tells the robot to follow the trajectory above
         drive.followTrajectory(trajectoryC1Red1);
         drive.followTrajectory(trajectoryC1Red2);
@@ -75,6 +103,10 @@ public class autonomousStart1MatC extends LinearOpMode {// This line measures ho
         /* This saves the coordinates in another program so that the robot can recognize where the coordinates
         are when it sees them again */
         PoseStorage.currentPose = drive.getPoseEstimate();
+
+        //sets powers (off))
+        shooterMotor.set(0.0);
+        intakeMotor.set(0.0);
 
 
     }

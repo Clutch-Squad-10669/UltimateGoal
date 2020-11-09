@@ -48,10 +48,11 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
         // Initialize custom cancelable SampleMecanumDrive class
         SampleMecanumDriveCancelable drive = new SampleMecanumDriveCancelable(hardwareMap);
 
+
         //we use PID to maintain a constant velocity on the shooter, and normally drive the intake (this uses FTClib)
         //initialize runmode
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
-        shooterMotor.setRunMode(Motor.RunMode.RawPower);
+        intakeMotor.setRunMode(Motor.RunMode.RawPower);
 
             //sets coeffs for PID motor 1
             shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);

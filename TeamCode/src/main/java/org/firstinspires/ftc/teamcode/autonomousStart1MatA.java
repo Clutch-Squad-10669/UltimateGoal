@@ -3,15 +3,18 @@ package org.firstinspires.ftc.teamcode;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 
-@Autonomous (name = "RoadRunnerAutonomous1A")
-public class autonomousStart1MatA extends LinearOpMode
-{
+
+
+@Autonomous(name = "RoadRunnerAutonomous1A")
+public class autonomousStart1MatA extends LinearOpMode {
+
         double anglePheta = 90 - (Math.atan((105 / 24)));
 
         @Override

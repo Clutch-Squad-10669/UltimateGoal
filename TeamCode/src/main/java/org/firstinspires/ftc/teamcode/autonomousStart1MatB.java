@@ -22,14 +22,11 @@ public class autonomousStart1MatB extends LinearOpMode {
     double anglePheta = 90 - (Math.atan((105 / 24)));
 
     // This is our main method
-
     @Override
     public void runOpMode() throws InterruptedException {
 
         Pose2d myPose = new Pose2d(-62, -25, Math.toRadians(0));
-
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
         Trajectory trajectoryB2Red = drive.trajectoryBuilder(
                 new Pose2d())
                 .splineTo(new Vector2d(34, -35), Math.toRadians(0))

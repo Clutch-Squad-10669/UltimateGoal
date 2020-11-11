@@ -13,6 +13,12 @@ import com.qualcomm.robotcore.hardware.DigitalChannel;
 import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable;
 
+/* This is the Team10669 clutch teleOP code for UG 2020-2021.
+    It includes a field-relative Mecanum Drive, PID control for the linearSlide and shooterMotor, a magnetic touch sensor, as well as a semi-autonomous mode
+    The Field Relative code uses RoadRunner @see <a href="https://learnroadrunner.com">learnroadrunner</a>
+    PID control, Motor control, SimpleServo, and Position Control use FTClib @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
+ */
+
 @Config
 @TeleOp(name="ShauryaTeleOp1")
 public class RoadRunnerTeleOP1 extends LinearOpMode {

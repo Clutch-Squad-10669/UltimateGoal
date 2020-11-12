@@ -174,6 +174,9 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
+            telemetry.addData("coeffs", coeffs);
+            telemetry.addData("ffcoeffs", ffCoeffs);
+            telemetry.addData("slideKP1", kP1);
             telemetry.update();
 
              // Declare a drive direction
@@ -372,8 +375,6 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
                 fieldOverlay.setStroke("#3F51B5");
                 DashboardUtil.drawRobot(fieldOverlay, poseEstimate);
 
-                drive.setWeightedDrivePower(driveDirection);
-
                 // Update the heading controller with our current heading
                 headingController.update(poseEstimate.getHeading());
 
@@ -382,12 +383,6 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
 
                 // Send telemetry packet off to dashboard
                 FtcDashboard.getInstance().sendTelemetryPacket(packet);
-
-                // Print pose to telemetry
-                telemetry.addData("x", poseEstimate.getX());
-                telemetry.addData("y", poseEstimate.getY());
-                telemetry.addData("heading", poseEstimate.getHeading());
-                telemetry.update();
 
             }
         }

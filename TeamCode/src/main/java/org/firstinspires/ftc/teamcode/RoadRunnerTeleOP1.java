@@ -27,8 +27,8 @@ import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.ALIGN_TO_PO
 import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.DRIVER_CONTROL;
 
 /* This is the Team10669 clutch teleOP code for UG 2020-2021.
-    It includes a field-relative Mecanum Drive, PID control for the linearSlide and shooterMotor, a magnetic touch sensor, as well as a semi-autonomous mode
-    The Field Relative code uses RoadRunner @see <a href="https://learnroadrunner.com">learnroadrunner</a>
+    It includes a field-relative Mecanum Drive, PID control for the linearSlide and shooterMotor, a magnetic touch sensor, an align-to-point mode, as well as a semi-autonomous mode
+    The Field Relative code, augmented auto, and align-to-point mode use RoadRunner @see <a href="https://learnroadrunner.com">learnroadrunner</a>
     PID control, Motor control, SimpleServo, and Position Control use FTClib @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
  */
 
@@ -48,11 +48,17 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
     //add the magnetic limit switch
     DigitalChannel digitalTouch;
 
+    // Declare a PIDF Controller to regulate heading
+    // Use the same gains as SampleMecanumDrive's heading controller
+    private PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
+
+
     //finds the exact angle we need to turn to face the powershots
     final double anglePheta = 90 - (Math.atan((105/24)));
 
     //sets target radius for dashboard
     public static double DRAWING_TARGET_RADIUS = 2;
+
 
     //creates three states, driver control, align to point, and automatic control
     enum State {
@@ -64,9 +70,6 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
     //right now we set our state to driver control
     State currentState = DRIVER_CONTROL;
 
-    // Declare a PIDF Controller to regulate heading
-    // Use the same gains as SampleMecanumDrive's heading controller
-    private PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
 
     //target to align with
     private Vector2d targetPosition = new Vector2d(0, 0);
@@ -93,6 +96,7 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
         return (int) cmTick;
     }
 
+
     //declare @override
     @Override
     public void runOpMode() throws InterruptedException {
@@ -105,6 +109,7 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
 
         // set the digital channel to input.
         digitalTouch.setMode(DigitalChannel.Mode.INPUT);
+
 
         //we use PID to maintain a constant velocity on the shooter, and normally drive the intake (this uses FTClib)
         //linearSlide is set using runToPosition
@@ -138,12 +143,14 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
         // Velocity control per wheel is not necessary outside of motion profiled auto
         drive.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
+
         //gets our pose fro the PoseStorage, which was written to at the end of the previous auto
         drive.setPoseEstimate(PoseStorage.currentPose);
 
         // Set input bounds for the heading controller
         // Automatically handles overflow
         headingController.setInputBounds(-Math.PI, Math.PI);
+
 
         //wait for start
         waitForStart();
@@ -282,10 +289,17 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
                             armServo.turnToAngle(0);
                         }
 
-                    } else if (gamepad1.right_trigger > 0.3) {
+                    } else if (gamepad1.right_trigger > 0.5) {
 
-                        feedServo.turnToAngle(gamepad1.right_trigger);
+                        int under = 0;
 
+                        while (under < 3 ) {
+
+                            feedServo.turnToAngle(1);
+                            feedServo.turnToAngle(0);
+                            under++;
+
+                        }
                     }
 
                     break;
@@ -379,5 +393,8 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
         }
     }
 }
+
+
+
 
 

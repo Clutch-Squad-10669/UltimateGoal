@@ -41,15 +41,18 @@ public class AutoTransferPose extends LinearOpMode {
         // Refer to https://www.learnroadrunner.com/trajectories.html#coordinate-system for a map
         // of the field
         // This example sets the bot at x: 10, y: 15, and facing 90 degrees (turned counter-clockwise)
-        drive.setPoseEstimate(new Pose2d(10, 15, Math.toRadians(90)));
+        Pose2d startPose = new Pose2d(10, 15, Math.toRadians(90));
+
+        drive.setPoseEstimate(startPose);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
         // Example spline path from SplineTest.java
-        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
-                .splineTo(new Vector2d(30, 30), 0)
+        // Make sure the start pose matches with the localizer's start pose
+        Trajectory traj = drive.trajectoryBuilder(startPose)
+                .splineTo(new Vector2d(45, 45), 0)
                 .build();
 
         drive.followTrajectory(traj);
@@ -58,7 +61,7 @@ public class AutoTransferPose extends LinearOpMode {
 
         drive.followTrajectory(
                 drive.trajectoryBuilder(traj.end(), true)
-                        .splineTo(new Vector2d(0, 0), Math.toRadians(180))
+                        .splineTo(new Vector2d(15, 15), Math.toRadians(180))
                         .build()
         );
 

@@ -1,6 +1,7 @@
 package org.firstinspires.ftc.teamcode.drive.advanced;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -8,15 +9,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 
 /**
- * This opmode demonstrates how to create a teleop using just the SampleMecanumDrive class without
- * the need for an external robot class. This will allow you to do some cool things like
- * incorporating live trajectory following in your teleop. Check out TeleOpAgumentedDriving.java for
- * an example of such behavior.
+ * This opmode demonstrates how one would implement field centric control using
+ * `SampleMecanumDrive.java`. This file is essentially just `TeleOpDrive.java` with the addition of
+ * field centric control. To achieve field centric control, the only modification one needs is to
+ * rotate the input vector by the current heading before passing it into the inverse kinematics.
  * <p>
- * This opmode is essentially just LocalizationTest.java with a few additions and comments.
+ * See lines 42-57.
  */
 @TeleOp(group = "advanced")
-public class TeleOpDrive extends LinearOpMode {
+public class TeleOpFieldCentric extends LinearOpMode {
     @Override
     public void runOpMode() throws InterruptedException {
         // Initialize SampleMecanumDrive
@@ -35,19 +36,28 @@ public class TeleOpDrive extends LinearOpMode {
         if (isStopRequested()) return;
 
         while (opModeIsActive() && !isStopRequested()) {
+            // Read pose
+            Pose2d poseEstimate = drive.getPoseEstimate();
+
+            // Create a vector from the gamepad x/y inputs
+            // Then, rotate that vector by the inverse of that heading
+            Vector2d input = new Vector2d(
+                    -gamepad1.left_stick_y,
+                    -gamepad1.left_stick_x
+            ).rotated(-poseEstimate.getHeading());
+
+            // Pass in the rotated input + right stick value for rotation
+            // Rotation is not part of the rotated input thus must be passed in separately
             drive.setWeightedDrivePower(
                     new Pose2d(
-                            -gamepad1.left_stick_y,
-                            -gamepad1.left_stick_x,
+                            input.getX(),
+                            input.getY(),
                             -gamepad1.right_stick_x
                     )
             );
 
             // Update everything. Odometry. Etc.
             drive.update();
-
-            // Read pose
-            Pose2d poseEstimate = drive.getPoseEstimate();
 
             // Print pose to telemetry
             telemetry.addData("x", poseEstimate.getX());

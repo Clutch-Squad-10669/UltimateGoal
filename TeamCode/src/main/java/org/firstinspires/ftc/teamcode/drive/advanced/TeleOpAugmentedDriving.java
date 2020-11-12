@@ -1,9 +1,9 @@
 package org.firstinspires.ftc.teamcode.drive.advanced;
 
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
@@ -34,16 +34,15 @@ import com.qualcomm.robotcore.hardware.DcMotor;
  * <p>
  * This sample utilizes the SampleMecanumDriveCancelable.java class.
  */
-@Config
 @TeleOp(group = "advanced")
 public class TeleOpAugmentedDriving extends LinearOpMode {
     // Define 2 states, drive control or automatic control
-    enum State {
+    enum Mode {
         DRIVER_CONTROL,
         AUTOMATIC_CONTROL
     }
 
-    State currentState = State.DRIVER_CONTROL;
+    Mode currentMode = Mode.DRIVER_CONTROL;
 
     // The coordinates we want the bot to automatically go to when we press the A button
     Vector2d targetAVector = new Vector2d(45, 45);
@@ -81,6 +80,7 @@ public class TeleOpAugmentedDriving extends LinearOpMode {
             Pose2d poseEstimate = drive.getPoseEstimate();
 
             // Print pose to telemetry
+            telemetry.addData("mode", currentMode);
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
@@ -88,7 +88,7 @@ public class TeleOpAugmentedDriving extends LinearOpMode {
 
             // We follow different logic based on whether we are in manual driver control or switch
             // control to the automatic mode
-            switch (currentState) {
+            switch (currentMode) {
                 case DRIVER_CONTROL:
                     drive.setWeightedDrivePower(
                             new Pose2d(
@@ -109,7 +109,7 @@ public class TeleOpAugmentedDriving extends LinearOpMode {
 
                         drive.followTrajectoryAsync(traj1);
 
-                        currentState = State.AUTOMATIC_CONTROL;
+                        currentMode = Mode.AUTOMATIC_CONTROL;
                     } else if (gamepad1.b) {
                         // If the B button is pressed on gamepad1, we generate a lineTo()
                         // trajectory on the fly and follow it
@@ -121,28 +121,28 @@ public class TeleOpAugmentedDriving extends LinearOpMode {
 
                         drive.followTrajectoryAsync(traj1);
 
-                        currentState = State.AUTOMATIC_CONTROL;
+                        currentMode = Mode.AUTOMATIC_CONTROL;
                     } else if (gamepad1.y) {
                         // If Y is pressed, we turn the bot to the specified angle to reach
                         // targetAngle (by default, 45 degrees)
 
-                        drive.turnAsync(targetAngle - poseEstimate.getHeading());
+                        drive.turnAsync(Angle.normDelta(targetAngle - poseEstimate.getHeading()));
 
-                        currentState = State.AUTOMATIC_CONTROL;
+                        currentMode = Mode.AUTOMATIC_CONTROL;
                     }
                     break;
                 case AUTOMATIC_CONTROL:
                     // If x is pressed, we break out of the automatic following
                     if (gamepad1.x) {
                         drive.cancelFollowing();
-                        currentState = State.DRIVER_CONTROL;
+                        currentMode = Mode.DRIVER_CONTROL;
                     }
 
                     // If drive finishes its task, cede control to the driver
                     if (!drive.isBusy()) {
-                        currentState = State.DRIVER_CONTROL;
-                        break;
+                        currentMode = Mode.DRIVER_CONTROL;
                     }
+                    break;
             }
         }
     }

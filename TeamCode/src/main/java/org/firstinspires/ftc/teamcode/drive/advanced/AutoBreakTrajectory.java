@@ -29,14 +29,15 @@ public class AutoBreakTrajectory extends LinearOpMode {
         // Refer to https://www.learnroadrunner.com/trajectories.html#coordinate-system for a map
         // of the field
         // This example sets the bot at x: -20, y: -35, and facing 90 degrees (turned counter-clockwise)
-        drive.setPoseEstimate(new Pose2d(-20, -35, Math.toRadians(90)));
+        Pose2d startPose = new Pose2d(-20, -35, Math.toRadians(90));
+        drive.setPoseEstimate(startPose);
 
         waitForStart();
 
         if (isStopRequested()) return;
 
         // Example spline path from SplineTest.java
-        Trajectory traj = drive.trajectoryBuilder(new Pose2d())
+        Trajectory traj = drive.trajectoryBuilder(startPose)
                 .splineTo(new Vector2d(60, 60), 0)
                 .build();
 

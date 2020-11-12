@@ -53,8 +53,8 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
 
     //name gear ratio wheel radius and ticks for encoder cm conversion
     public static double GEAR_RATIO = 1.0; // for simulator
-    public static double WHEEL_RADIUS = 5.0;  // 5 cm
-    public static double TICKS_PER_ROTATION = 8192.0;  // From NeveRest (for simulator)
+    public static double WHEEL_RADIUS = 1.0;  // 5 cm
+    public static double TICKS_PER_ROTATION = 103.6;  // From NeveRest (for simulator)
 
     //calculate cm
     double CM_PER_TICK = (2 * Math.PI * GEAR_RATIO * WHEEL_RADIUS) / TICKS_PER_ROTATION;

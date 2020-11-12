@@ -41,6 +41,8 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
     Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
     Motor linearSlide = new Motor(hardwareMap, "motor3", Motor.GoBILDA.RPM_1620);
 
+    double motorVel;
+
     //create the servo for the wobble, one for shooter feed
     SimpleServo armServo = new SimpleServo(hardwareMap, "servo1");
     SimpleServo feedServo = new SimpleServo(hardwareMap, "servo2");
@@ -135,7 +137,8 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
             double kP1 = linearSlide.getPositionCoefficient();
 
         //sets powers (temporary)
-        shooterMotor.set(0.0);
+        motorVel = 0.0;
+        shooterMotor.set(motorVel);
         intakeMotor.set(0.0);
         linearSlide.set(0.0);
 
@@ -215,12 +218,14 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
 
                     //right bumper is to turn on intake/shooter
                     if (gamepad2.right_bumper) {
-                        shooterMotor.set(1.0);
+                        motorVel = 1.0;
+                        shooterMotor.set(motorVel);
                         intakeMotor.set(1.0);
 
                     //left bumper turns it off
                     } else if (gamepad2.left_bumper) {
-                        shooterMotor.set(0.0);
+                        motorVel = 0.0;
+                        shooterMotor.set(motorVel);
                         intakeMotor.set(0.0);
 
                     //dpad up to fully extend the linear slide
@@ -303,6 +308,13 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
                             under++;
 
                         }
+
+                    } else if (gamepad1.dpad_up) {
+                        motorVel += 0.05;
+                        intakeMotor.set(motorVel);
+                    } else if (gamepad1.dpad_down) {
+                        motorVel -= 0.05;
+                        intakeMotor.set(motorVel);
                     }
 
                     break;
@@ -388,8 +400,3 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
         }
     }
 }
-
-
-
-
-

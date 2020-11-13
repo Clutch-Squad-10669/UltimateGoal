@@ -21,9 +21,12 @@
 
 package org.firstinspires.ftc.teamcode;
 
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
+import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.opencv.core.Core;
 import org.opencv.core.Mat;
 import org.opencv.core.Point;
@@ -51,6 +54,11 @@ public class EasyOpenCVExample extends LinearOpMode
         pipeline = new SkystoneDeterminationPipeline();
         phoneCam.setPipeline(pipeline);
 
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        //Telemetry dashboardTelemetry = dashboard.getTelemetry();
+        TelemetryPacket packet = new TelemetryPacket();
+        //FtcDashboard.getInstance().startCameraStream(phoneCam, 30);
+
         // We set the viewport policy to optimized view so the preview doesn't appear 90 deg
         // out when the RC activity is in portrait. We do our actual image processing assuming
         // landscape orientation, though.
@@ -72,6 +80,17 @@ public class EasyOpenCVExample extends LinearOpMode
             telemetry.addData("Analysis", pipeline.getAnalysis());
             telemetry.addData("Position", pipeline.position);
             telemetry.update();
+
+            packet.put("Analysis", pipeline.getAnalysis());
+            packet.put("Position", pipeline.position);
+            dashboard.sendTelemetryPacket(packet);
+
+
+
+            //dashboardTelemetry.addData("Analysis", pipeline.getAnalysis());
+            //dashboardTelemetry.addData("Position", pipeline.position);
+            //dashboardTelemetry.update();
+
 
             // Don't burn CPU cycles busy-looping in this sample
             sleep(50);

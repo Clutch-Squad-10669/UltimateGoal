@@ -26,9 +26,11 @@ import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.*;
 import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.ALIGN_TO_POINT;
 import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.DRIVER_CONTROL;
 
-/* This is the Team10669 clutch teleOP code for UG 2020-2021.
-    It includes a field-relative Mecanum Drive, PID control for the linearSlide and shooterMotor, a magnetic touch sensor, an align-to-point mode, as well as a semi-autonomous mode
-    The Field Relative code, augmented auto, and align-to-point mode use RoadRunner @see <a href="https://learnroadrunner.com">learnroadrunner</a>
+/*
+    This is the Team10669 clutch teleOP code for UG 2020-2021.
+    It includes a field-relative Mecanum Drive, PID control for the linearSlide and shooterMotor, a magnetic touch sensor, an align-to-point mode,
+    as well as a semi-autonomous mode. The Field Relative code, augmented auto, and align-to-point mode use RoadRunner
+    @see <a href="https://learnroadrunner.com">learnroadrunner</a>
     PID control, Motor control, SimpleServo, and Position Control use FTClib @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
  */
 
@@ -43,7 +45,7 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
 
     double motorVel;
 
-    //create the servo for the wobble, one for shooter feed
+    //create the servo for the wobble and one for shooter feed
     SimpleServo armServo = new SimpleServo(hardwareMap, "servo1");
     SimpleServo feedServo = new SimpleServo(hardwareMap, "servo2");
 
@@ -62,7 +64,7 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
     public static double DRAWING_TARGET_RADIUS = 2;
 
 
-    //creates three states, driver control, align to point, and automatic control
+    //creates three states, driver control, automatic control, and align to point
     enum State {
         DRIVER_CONTROL,
         AUTOMATIC_CONTROL,
@@ -76,11 +78,11 @@ public class RoadRunnerTeleOP1 extends LinearOpMode {
     //target to align with
     private Vector2d targetPosition = new Vector2d(0, 0);
 
-    //we set the target vector to -23, -26 which are the coordinates of the ring
+    //we set the target vector to -23, -36 which are the coordinates of the ring(s)
     Vector2d targetAVector = new Vector2d(-23, -36);
     Vector2d targetBVector = new Vector2d(-23, -36);
 
-    //we set the heading to anglePheta, which is around 12.88
+    //we set the heading to anglePheta, which is around 12.88 degrees
     double targetAHeading = Math.toRadians(anglePheta);
     double targetBHeading = Math.toRadians(anglePheta + 10);
 

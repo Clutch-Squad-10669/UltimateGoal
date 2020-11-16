@@ -12,14 +12,8 @@ import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
 import org.openftc.easyopencv.OpenCvInternalCamera;
 
-/**
- * This is an example of how to use the ExamplePipeLine
- * For more examples such as using a webcam and switching between different cameras
- * visit https://github.com/OpenFTC/EasyOpenCV/tree/master/examples/src/main/java/org/openftc/easyopencv/examples
- */
-@TeleOp(name = "contourTest")
-public class InternalCameraExample extends LinearOpMode
-{
+@TeleOp(name = "UGContourTest")
+public class UGContourRingPipelineJavaExample extends LinearOpMode {
     private static final int CAMERA_WIDTH = 320; // width  of wanted camera resolution
     private static final int CAMERA_HEIGHT = 240; // height of wanted camera resolution
 
@@ -31,21 +25,23 @@ public class InternalCameraExample extends LinearOpMode
     private static final String WEBCAM_NAME = ""; // insert webcam name from configuration if using webcam
 
     FtcDashboard dashboard = FtcDashboard.getInstance();
+    //Telemetry dashboardTelemetry = dashboard.getTelemetry();
     TelemetryPacket packet = new TelemetryPacket();
+    //FtcDashboard.getInstance().startCameraStream(phoneCam, 30);
 
     private UGContourRingPipeline pipeline;
     private OpenCvCamera camera;
 
-    private final int cameraMonitorViewId = this
-            .hardwareMap
-            .appContext
-            .getResources().getIdentifier(
-                    "cameraMonitorViewId",
-                    "id",
-                    hardwareMap.appContext.getPackageName()
-            );
     @Override
     public void runOpMode() throws InterruptedException {
+        int cameraMonitorViewId = this
+                .hardwareMap
+                .appContext
+                .getResources().getIdentifier(
+                        "cameraMonitorViewId",
+                        "id",
+                        hardwareMap.appContext.getPackageName()
+                );
         if (USING_WEBCAM) {
             camera = OpenCvCameraFactory
                     .getInstance()
@@ -73,7 +69,6 @@ public class InternalCameraExample extends LinearOpMode
 
             packet.put("[Ring Stack] >>", height);
             dashboard.sendTelemetryPacket(packet);
-
         }
     }
 }

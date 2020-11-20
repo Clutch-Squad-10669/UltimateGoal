@@ -5,12 +5,16 @@ import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.openftc.easyopencv.*;
 
-@TeleOp(name = "UGContourTest")
-public class UGContourRingPipelineJavaExample extends LinearOpMode {
+import static com.arcrobotics.ftclib.vision.UGContourRingPipeline.*;
+import static com.arcrobotics.ftclib.vision.UGContourRingPipeline.Height.*;
+
+@Autonomous(name = "UGAutoTest")
+public class UGContourTest extends LinearOpMode {
+
     private static final int CAMERA_WIDTH = 320; // width  of wanted camera resolution
     private static final int CAMERA_HEIGHT = 240; // height of wanted camera resolution
 
@@ -28,6 +32,13 @@ public class UGContourRingPipelineJavaExample extends LinearOpMode {
 
     private UGContourRingPipeline pipeline;
     private OpenCvCamera camera;
+
+
+    enum State {
+        FOUR,
+        ONE,
+        ZERO
+    }
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -51,23 +62,47 @@ public class UGContourRingPipelineJavaExample extends LinearOpMode {
 
         camera.setPipeline(pipeline = new UGContourRingPipeline(telemetry, DEBUG));
 
-        UGContourRingPipeline.Config.setCAMERA_WIDTH(CAMERA_WIDTH);
+        Config.setCAMERA_WIDTH(CAMERA_WIDTH);
 
-        UGContourRingPipeline.Config.setHORIZON(HORIZON);
+        Config.setHORIZON(HORIZON);
 
         //camera.openCameraDeviceAsync(() -> camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT));
 
         FtcDashboard.getInstance().startCameraStream(camera, 0);
 
+        State state = State.ZERO;
+
+        while (!isStarted()) {
+            switch (pipeline.getHeight()) {
+                case ZERO:
+                  state = State.ZERO;
+                  break;
+                case ONE:
+                  state = State.ONE;
+                  break;
+                case FOUR:
+                  state = State.FOUR;
+                  break;
+              }
+            
+        }
+
+
         waitForStart();
 
-        while (opModeIsActive()) {
-            String height = "[HEIGHT]" + " " + pipeline.getHeight();
-            telemetry.addData("[Ring Stack] >>", height);
-            telemetry.update();
+        if (isStopRequested()) return;
 
-            packet.put("[Ring Stack] >>", height);
-            dashboard.sendTelemetryPacket(packet);
+        switch (state) {
+            case ZERO:
+                break;
+            case ONE:
+                break;
+            case FOUR:
+                break;
+
         }
+
+        
     }
+
 }

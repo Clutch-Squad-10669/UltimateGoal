@@ -15,6 +15,8 @@ import org.openftc.easyopencv.*;
 
 import static com.arcrobotics.ftclib.vision.UGContourRingPipeline.*;
 
+//test for vscode
+
 //declare the autonomous
 @Autonomous(name = "UGAutoTest")
 public class UGContourTest extends LinearOpMode {

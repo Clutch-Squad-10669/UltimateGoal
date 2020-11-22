@@ -1,6 +1,5 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.examples;
 
-//import whatever
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -16,10 +15,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
 @Disabled
-//declare Autonomous, class
-@Autonomous(name="Shauryas10669 - sqaure w/ encoder")
-public class Shauryas10669square extends LinearOpMode {
-    //name all the motors
+@Autonomous(name = "ProgrammingGroupProject", group = "whatsup")
+public class ProgrammingChallenge2 extends LinearOpMode
+{
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backLeft;
@@ -50,60 +48,8 @@ public class Shauryas10669square extends LinearOpMode {
         backRight.setPower(brSpeed / largest);
     }
 
+    public void MecanumEncoder(double power, int fowardcm, int strafecm) {
 
-    //make a function that just lets us name cm and power, and it drives for us
-    public void fowardMecanumEncoder(double power, int cm) {
-
-        frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-        backRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
-
-        //use 2pirad = circumference and divide by ticks per rotation to find cm per tick
-        //2 * pi * gear * radius gives us the circumference in cm of the wheel
-        //dividing it by the ticks per rotation gives us the CM per tick
-        double CM_PER_TICK = (2 * Math.PI * GEAR_RATIO * WHEEL_RADIUS) / TICKS_PER_ROTATION;
-        //get ticks we need to travel based on cm, convert to int because we need a integer
-        //since pi isn't exact, we just round up or down
-        int tick = (int) (cm / CM_PER_TICK);
-
-        //reset all encoders
-        frontLeft.setMode(STOP_AND_RESET_ENCODER);
-        frontRight.setMode(STOP_AND_RESET_ENCODER);
-        backLeft.setMode(STOP_AND_RESET_ENCODER);
-        backRight.setMode(STOP_AND_RESET_ENCODER);
-
-        //set tick as the target position
-        frontLeft.setTargetPosition(tick);
-        frontRight.setTargetPosition(tick);
-        backLeft.setTargetPosition(tick);
-        backRight.setTargetPosition(tick);
-
-        //run to position
-        frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        frontRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-        backRight.setMode(DcMotor.RunMode.RUN_TO_POSITION);
-
-        //set power
-        setSpeeds(power, power, power, power);
-
-        //empty loop cause we need it
-        while (frontRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
-        }
-
-        setSpeeds(0, 0, 0, 0);
-        sleep(250);
-
-        frontLeft.setMode(STOP_AND_RESET_ENCODER);
-        frontRight.setMode(STOP_AND_RESET_ENCODER);
-        backLeft.setMode(STOP_AND_RESET_ENCODER);
-        backRight.setMode(STOP_AND_RESET_ENCODER);
-
-    }
-
-    //same thing as the above, just with two values reversed for strafing
-    public void strafeMecanumEncoder(double power, int cm) {
         frontLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         frontRight.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
         backLeft.setMode(DcMotor.RunMode.RUN_USING_ENCODER);
@@ -112,7 +58,8 @@ public class Shauryas10669square extends LinearOpMode {
         //find cm per tick based on 2pirad/tick per revolution
         double CM_PER_TICK = (2 * Math.PI * GEAR_RATIO * WHEEL_RADIUS) / TICKS_PER_ROTATION;
         //get tick we need to travel based on cm
-        int tick = (int) (cm / CM_PER_TICK);
+        int tick1 = (int) (fowardcm / CM_PER_TICK);
+        int tick2 = (int) (strafecm / CM_PER_TICK);
 
         //reset encoders
         frontLeft.setMode(STOP_AND_RESET_ENCODER);
@@ -120,11 +67,15 @@ public class Shauryas10669square extends LinearOpMode {
         backLeft.setMode(STOP_AND_RESET_ENCODER);
         backRight.setMode(STOP_AND_RESET_ENCODER);
 
-        //reverse the tick fot the front right and bottom left so they go backwards
-        frontLeft.setTargetPosition(tick);
-        frontRight.setTargetPosition(-tick);
-        backLeft.setTargetPosition(-tick);
-        backRight.setTargetPosition(tick);
+        int frontLeftTick = tick1 + tick2;
+        int frontRightTick = tick1 - tick2;
+        int backLeftTick = tick1 - tick2;
+        int backRightTick = tick1 + tick2;
+
+        frontLeft.setTargetPosition(frontLeftTick);
+        frontRight.setTargetPosition(frontRightTick);
+        backLeft.setTargetPosition(backLeftTick);
+        backRight.setTargetPosition(backRightTick);
 
         //run to position
         frontLeft.setMode(DcMotor.RunMode.RUN_TO_POSITION);
@@ -134,7 +85,7 @@ public class Shauryas10669square extends LinearOpMode {
 
         //take the power, reverse it for the top right and bottom left wheels to strafe left
 
-        setSpeeds(power, -power, -power, power);
+        setSpeeds(power, power, power, power);
 
         while (frontRight.isBusy() && frontLeft.isBusy() && backLeft.isBusy() && backRight.isBusy()) {
         }
@@ -166,6 +117,8 @@ public class Shauryas10669square extends LinearOpMode {
     }
 
     public void rotate(int degrees, double power) {
+        degrees = -degrees;
+
         double leftPower, rightPower;
 
         frontLeft.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
@@ -196,6 +149,8 @@ public class Shauryas10669square extends LinearOpMode {
             while (opModeIsActive() && getAngle() > degrees) {
             }
         } else
+            while (opModeIsActive() && getAngle() == 0) {
+            }
             while (opModeIsActive() && getAngle() < degrees) {
             }
 
@@ -204,7 +159,7 @@ public class Shauryas10669square extends LinearOpMode {
         backLeft.setPower(0);
         backRight.setPower(0);
 
-        sleep(1200);
+        sleep(750);
         resetAngle();
     }
 
@@ -251,32 +206,22 @@ public class Shauryas10669square extends LinearOpMode {
         imu.initialize(parameters);
 
         //wait for start
-        waitForStart();
+                waitForStart();
 
-        //show that its running
-        telemetry.addData("Mode", "running...");
-        telemetry.update();
+                //show that its running
+                telemetry.addData("Mode", "running...");
+                telemetry.update();
 
-        //go in a square
+                MecanumEncoder(.5, 0,  50);
+                MecanumEncoder(.5, 75, 0);
+                MecanumEncoder(.5, -5, 0);
+                MecanumEncoder(.5, 0, -200);
+                MecanumEncoder(.5, 5, 0);
+                MecanumEncoder(.5, -5, 0);
+                MecanumEncoder(.5, 0,200);
+                MecanumEncoder(.5, 5, 0);
+                //hello this is a test
 
-        fowardMecanumEncoder(.75, 100);
-        rotate(-90, .5);
-        fowardMecanumEncoder(.75, 100);
-        rotate(-90, .5);
-        fowardMecanumEncoder(.75, 100);
-        rotate(-90, .5);
-        fowardMecanumEncoder(.75, 100);
-        rotate(-90, .5);
-
-        //foward
-        fowardMecanumEncoder(.75, 100);
-        //right
-        strafeMecanumEncoder(.75, 100);
-        //down
-        fowardMecanumEncoder(.75, -100);
-        //left
-        strafeMecanumEncoder(.75, -100);
     }
+
 }
-
-

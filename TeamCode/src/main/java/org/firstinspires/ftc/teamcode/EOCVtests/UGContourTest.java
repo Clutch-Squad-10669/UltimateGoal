@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode;
+package org.firstinspires.ftc.teamcode.EOCVtests;
 
 //general imports
 import com.acmerobotics.dashboard.FtcDashboard;
@@ -21,6 +21,7 @@ import static com.arcrobotics.ftclib.vision.UGContourRingPipeline.*;
 @Autonomous(name = "UGAutoTest")
 public class UGContourTest extends LinearOpMode {
 
+    /*
     //create objects of our other autonomous OpModes to make cleaner code
     autonomousStart1MatA start1MatA = new autonomousStart1MatA();
     autonomousStart1MatB start1MatB = new autonomousStart1MatB();
@@ -35,6 +36,8 @@ public class UGContourTest extends LinearOpMode {
 
     //angle pheta and general other imports
     double anglePheta = 90 - (Math.atan((105 / 24)));
+
+     */
 
     //input the camera information, webcam info
     private static final int CAMERA_WIDTH = 320; // width  of wanted camera resolution
@@ -56,7 +59,7 @@ public class UGContourTest extends LinearOpMode {
     private OpenCvCamera camera;
 
     //create a state enum for our finite state machine
-    enum State {
+    public enum State {
         FOUR,
         ONE,
         ZERO,
@@ -95,10 +98,10 @@ public class UGContourTest extends LinearOpMode {
         Config.setHORIZON(HORIZON);
 
         //start streaming to driverstation
-        //camera.openCameraDeviceAsync(() -> camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT));
+        camera.openCameraDeviceAsync(() -> camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT));
 
         //start streaming to ftc dash
-        FtcDashboard.getInstance().startCameraStream(camera, 0);
+        FtcDashboard.getInstance().startCameraStream(camera, 10);
 
         //set current state for zero
         State state = State.ZERO;
@@ -130,13 +133,16 @@ public class UGContourTest extends LinearOpMode {
         //we are going to run a specific op mode depending on the state detected
         switch (state) {
             case ZERO:
-                start1MatA.runOpMode();
+                packet.put("current state", state);
+                dashboard.sendTelemetryPacket(packet);
                 break;
             case ONE:
-                start1MatB.runOpMode();
+                packet.put("current state", state);
+                dashboard.sendTelemetryPacket(packet);
                 break;
             case FOUR:
-                start1MatC.runOpMode();
+                packet.put("current state", state);
+                dashboard.sendTelemetryPacket(packet);
                 break;
         }
 

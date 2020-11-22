@@ -22,9 +22,9 @@ import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
-import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.*;
-import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.ALIGN_TO_POINT;
-import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.DRIVER_CONTROL;
+import static org.firstinspires.ftc.teamcode.TeleOpMain.State.*;
+import static org.firstinspires.ftc.teamcode.TeleOpMain.State.ALIGN_TO_POINT;
+import static org.firstinspires.ftc.teamcode.TeleOpMain.State.DRIVER_CONTROL;
 
 /*
     This is the Team10669 clutch teleOP code for UG 2020-2021.
@@ -36,7 +36,7 @@ import static org.firstinspires.ftc.teamcode.RoadRunnerTeleOP1.State.DRIVER_CONT
 
 @Config
 @TeleOp(name="ShauryaTeleOp1")
-public class RoadRunnerTeleOP1 extends LinearOpMode {
+public class TeleOpMain extends LinearOpMode {
 
     //initialize the shooter's motor and the intake motor (ftclib)
     Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);

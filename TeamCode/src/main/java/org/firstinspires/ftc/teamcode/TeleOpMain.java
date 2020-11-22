@@ -10,20 +10,17 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.arcrobotics.ftclib.util.InterpLUT;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DigitalChannel;
-
-
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 
 import static org.firstinspires.ftc.teamcode.TeleOpMain.State.*;
-import static org.firstinspires.ftc.teamcode.TeleOpMain.State.ALIGN_TO_POINT;
-import static org.firstinspires.ftc.teamcode.TeleOpMain.State.DRIVER_CONTROL;
 
 /*
     This is the Team10669 clutch teleOP code for UG 2020-2021.
@@ -99,6 +96,16 @@ public class TeleOpMain extends LinearOpMode {
         return (int) cmTick;
     }
 
+    InterpLUT RPMlut = new InterpLUT()
+    {{
+        RPMlut.add(5, 1);
+        RPMlut.add(4.1, 0.9);
+        RPMlut.add(3.6, 0.75);
+        RPMlut.add(2.7, .5);
+        RPMlut.add(1.1, 0.2);
+        RPMlut.createLUT();
+
+    }};
 
     //declare @override
     @Override
@@ -219,14 +226,12 @@ public class TeleOpMain extends LinearOpMode {
 
                     //right bumper is to turn on intake/shooter
                     if (gamepad2.right_bumper) {
-                        motorVel = 1.0;
-                        shooterMotor.set(motorVel);
+
                         intakeMotor.set(1.0);
 
                     //left bumper turns it off
                     } else if (gamepad2.left_bumper) {
-                        motorVel = 0.0;
-                        shooterMotor.set(motorVel);
+
                         intakeMotor.set(0.0);
 
                     //dpad up to fully extend the linear slide
@@ -318,6 +323,9 @@ public class TeleOpMain extends LinearOpMode {
                         intakeMotor.set(motorVel);
                     }
 
+                    //set the motor speed based on the LUT table
+                    shooterMotor.set(RPMlut.get(Math.atan2(Math.abs(72.0 + drive.getPoseEstimate().getX()), Math.abs(-16.0 + drive.getPoseEstimate().getY()))));
+
                     break;
 
                 case ALIGN_TO_POINT:
@@ -367,6 +375,9 @@ public class TeleOpMain extends LinearOpMode {
                     fieldOverlay.setStroke("#ffce7a");
                     fieldOverlay.strokeLine(targetPosition.getX(), targetPosition.getY(), targetPosition.getX(), poseEstimate.getY());
                     fieldOverlay.strokeLine(targetPosition.getX(), poseEstimate.getY(), poseEstimate.getX(), poseEstimate.getY());
+
+                    //set power
+                    shooterMotor.set(RPMlut.get(Math.atan2(Math.abs(72.0 + drive.getPoseEstimate().getX()), Math.abs(-16.0 + drive.getPoseEstimate().getY()))));
                     break;
 
                 //if something happens during auto, then this breaks us out of it

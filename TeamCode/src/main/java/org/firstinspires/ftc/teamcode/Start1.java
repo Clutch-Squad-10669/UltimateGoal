@@ -20,34 +20,30 @@ import static com.arcrobotics.ftclib.vision.UGContourRingPipeline.Config;
 /*
     This is the Team10669 clutch teleOP code for UG 2020-2021.
     It includes a contour-based ring detector, finite state machines, and PID control for various motors
-    Ododmetry is done through the roadrunner library @see <a href="https://learnroadrunner.com">learnroadrunner</a>
+    Odometry is done through the roadrunner library @see <a href="https://learnroadrunner.com">learnroadrunner</a>
     The vision pipeline, servo control, and PID control is done through FTClib  @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
  */
 
+//declare autonomous
 @Autonomous(name = "Start1Auto")
 public class Start1 extends LinearOpMode {
 
-    //import traj storage
+    //import traj storage (contains trajectory files - uses roadrunner)
     TrajStorage trajStorage = new TrajStorage();
 
     //create shooterMotor and intakeMotor motor objects (bare)
     Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
     Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
-
-    //create the servo for the wobble
     SimpleServo armServo = new SimpleServo(hardwareMap, "servo1");
 
-    //angle pheta and general other imports
+    //angle pheta
     double anglePheta = 90 - (Math.atan((105 / 24)));
 
     //input the camera information, webcam info
     private static final int CAMERA_WIDTH = 320; // width  of wanted camera resolution
     private static final int CAMERA_HEIGHT = 240; // height of wanted camera resolution
-
     private static final int HORIZON = 100; // horizon value to tune
-
     private static final boolean DEBUG = false; // if debug is wanted, change to true
-
     private static final boolean USING_WEBCAM = false; // change to true if using webcam
     private static final String WEBCAM_NAME = ""; // insert webcam name from configuration if using webcam
 
@@ -75,11 +71,11 @@ public class Start1 extends LinearOpMode {
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
         intakeMotor.setRunMode(Motor.RunMode.RawPower);
 
-        //set coeffs
+        //set coeffs + feedforward (PID)
         shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
-        // set and get the feedforward coefficients
         shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
 
+        //hardwareMap
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
         //initialize the webcam and the pipeline
@@ -106,7 +102,6 @@ public class Start1 extends LinearOpMode {
 
         //set paramters
         Config.setCAMERA_WIDTH(CAMERA_WIDTH);
-
         Config.setHORIZON(HORIZON);
 
         //start streaming to driverstation
@@ -192,6 +187,7 @@ public class Start1 extends LinearOpMode {
 
         }
 
+        //write end position to class for teleOp
         PoseStorage.currentPose = drive.getPoseEstimate();
 
         //sets powers (off))

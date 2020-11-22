@@ -7,7 +7,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
+import org.firstinspires.ftc.teamcode.PoseStorage;
 
 public class autonomousStart2MatA extends LinearOpMode {
 

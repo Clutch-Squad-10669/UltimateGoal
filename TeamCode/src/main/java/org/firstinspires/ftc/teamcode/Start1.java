@@ -2,9 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.acmerobotics.roadrunner.geometry.Pose2d;
-import com.acmerobotics.roadrunner.geometry.Vector2d;
-import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline;
@@ -13,7 +10,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
 import org.firstinspires.ftc.teamcode.EOCVtests.UGContourTest;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.drive.advanced.PoseStorage;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
 import org.openftc.easyopencv.OpenCvCameraRotation;
@@ -21,13 +17,18 @@ import org.openftc.easyopencv.OpenCvInternalCamera2;
 
 import static com.arcrobotics.ftclib.vision.UGContourRingPipeline.Config;
 
+/*
+    This is the Team10669 clutch teleOP code for UG 2020-2021.
+    It includes a contour-based ring detector, finite state machines, and PID control for various motors
+    Ododmetry is done through the roadrunner library @see <a href="https://learnroadrunner.com">learnroadrunner</a>
+    The vision pipeline, servo control, and PID control is done through FTClib  @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
+ */
+
 @Autonomous(name = "Start1Auto")
 public class Start1 extends LinearOpMode {
 
-    //create objects of our other autonomous OpModes to make cleaner code
-    //autonomousStart1MatA start1MatA = new autonomousStart1MatA();
-    //autonomousStart1MatB start1MatB = new autonomousStart1MatB();
-    //autonomousStart1MatC start1MatC = new autonomousStart1MatC();
+    //import traj storage
+    TrajStorage trajStorage = new TrajStorage();
 
     //create shooterMotor and intakeMotor motor objects (bare)
     Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
@@ -79,65 +80,7 @@ public class Start1 extends LinearOpMode {
         // set and get the feedforward coefficients
         shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
 
-        //This tells the robot where it is on the mat to begin with
-        Pose2d myPose = new Pose2d(-62, -50, Math.toRadians(0));
-
-        //initialize hardware
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
-
-        /* This is our trajectory. It says that from "myPose" we go to the C target zone,
-        then we go to S position and, finally, we park on the white line. */
-
-        //go to mat C
-        Trajectory trajectoryC1Red1 = drive.trajectoryBuilder(
-                new Pose2d(-62, -50, Math.toRadians(0)))
-                .splineTo(new Vector2d(52.0, -60.0), 0.0)
-                .build();
-
-        //start a
-        Trajectory trajectoryC2Red1 = drive.trajectoryBuilder(
-                new Pose2d(-62, -50, Math.toRadians(0)))
-                .splineTo(new Vector2d(0,-60), Math.toRadians(0))
-                //.splineTo(new Vector2d(52.0, -60.0), 0.0)
-                .build();
-
-        //pick up rings on the way to the second wobble goal
-        Trajectory trajectoryC1Red2 = drive.trajectoryBuilder(
-                new Pose2d(52.0, -60.0,  Math.toRadians(0)))
-                .lineToSplineHeading(new Pose2d(-20.0, -36.0, -anglePheta))
-                .build();
-
-        //continue to the second wobble goal
-        Trajectory trajectoryC1Red3 = drive.trajectoryBuilder(
-                new Pose2d(-20.0, -36.0,  Math.toRadians(-anglePheta)))
-                .lineToSplineHeading(new Pose2d(-60.0, -25.0, Math.toRadians(0)))
-                .build();
-
-        //pick up wobble and aim to powershots
-        Trajectory trajectoryC1Red4 = drive.trajectoryBuilder(
-                new Pose2d(-60.0, -25.0,  Math.toRadians(0)))
-                .splineTo(new Vector2d(-23.0, -36.0), anglePheta)
-                .build();
-
-        //Back to mat C to drop off second one
-        Trajectory trajectoryC1Red5 = drive.trajectoryBuilder(
-                new Pose2d(-23.0, -36.0,  Math.toRadians(anglePheta)))
-                .lineToSplineHeading(new Pose2d(54.0, -60.0, Math.toRadians(0)))
-                .build();
-
-        //Back to mat A to drop off second one
-        Trajectory trajectoryC2Red5 = drive.trajectoryBuilder(
-                new Pose2d(-23.0, -36.0,  Math.toRadians(anglePheta)))
-                //.splineTo(new Vector2d(0,-60), Math.toRadians(0))
-                .lineToSplineHeading(new Pose2d(0.0, -60.0, Math.toRadians(0)))
-                .build();
-
-        //Park on line
-        Trajectory trajectoryC1Red6 = drive.trajectoryBuilder(
-                new Pose2d(54.0, -60.0,  Math.toRadians(0)))
-                .splineToConstantHeading(new Vector2d(10.0, -60.0), 0.0)
-                .build();
-
 
         //initialize the webcam and the pipeline
         int cameraMonitorViewId = this
@@ -210,12 +153,12 @@ public class Start1 extends LinearOpMode {
                 packet.put("current state", state);
                 dashboard.sendTelemetryPacket(packet);
 
-                drive.followTrajectory(trajectoryC2Red1);
-                drive.followTrajectory(trajectoryC1Red2);
-                drive.followTrajectory(trajectoryC1Red3);
-                drive.followTrajectory(trajectoryC1Red4);
-                drive.followTrajectory(trajectoryC2Red5);
-                drive.followTrajectory(trajectoryC1Red6);
+                drive.followTrajectory(trajStorage.trajectoryA1Red1);
+                drive.followTrajectory(trajStorage.trajectoryA1Red2);
+                drive.followTrajectory(trajStorage.trajectoryA1Red3);
+                drive.followTrajectory(trajStorage.trajectoryA1Red4);
+                drive.followTrajectory(trajStorage.trajectoryA1Red5);
+                drive.followTrajectory(trajStorage.trajectoryA1Red6);
 
                 break;
 
@@ -224,6 +167,13 @@ public class Start1 extends LinearOpMode {
                 packet.put("current state", state);
                 dashboard.sendTelemetryPacket(packet);
 
+                drive.followTrajectory(trajStorage.trajectoryB1Red1);
+                drive.followTrajectory(trajStorage.trajectoryA1Red2);
+                drive.followTrajectory(trajStorage.trajectoryA1Red3);
+                drive.followTrajectory(trajStorage.trajectoryA1Red4);
+                drive.followTrajectory(trajStorage.trajectoryB1Red5);
+                drive.followTrajectory(trajStorage.trajectoryA1Red6);
+
                 break;
 
             case FOUR:
@@ -231,12 +181,12 @@ public class Start1 extends LinearOpMode {
                 packet.put("current state", state);
                 dashboard.sendTelemetryPacket(packet);
 
-                drive.followTrajectory(trajectoryC1Red1);
-                drive.followTrajectory(trajectoryC1Red2);
-                drive.followTrajectory(trajectoryC1Red3);
-                drive.followTrajectory(trajectoryC1Red4);
-                drive.followTrajectory(trajectoryC1Red5);
-                drive.followTrajectory(trajectoryC1Red6);
+                drive.followTrajectory(trajStorage.trajectoryC1Red1);
+                drive.followTrajectory(trajStorage.trajectoryA1Red2);
+                drive.followTrajectory(trajStorage.trajectoryA1Red3);
+                drive.followTrajectory(trajStorage.trajectoryA1Red4);
+                drive.followTrajectory(trajStorage.trajectoryC1Red5);
+                drive.followTrajectory(trajStorage.trajectoryA1Red6);
 
                 break;
 

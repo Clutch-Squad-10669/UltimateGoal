@@ -8,6 +8,7 @@ import com.acmerobotics.roadrunner.control.PIDFController;
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.acmerobotics.roadrunner.util.Angle;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.util.InterpLUT;
@@ -39,6 +40,10 @@ public class TeleOpMain extends LinearOpMode {
     Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
     Motor linearSlide = new Motor(hardwareMap, "motor3", Motor.GoBILDA.RPM_1620);
 
+    //vector to find distance for autoturn
+    Vector2d difference;
+
+    //for future reference
     double motorVel;
 
     //create the servo for the wobble and one for shooter feed
@@ -48,9 +53,9 @@ public class TeleOpMain extends LinearOpMode {
     //add the magnetic limit switch
     DigitalChannel digitalTouch;
 
-    // Declare a PIDF Controller to regulate heading
+    // Declare a PIDF Controller to regulate heading (turn to poitn)
     // Use the same gains as SampleMecanumDrive's heading controller
-    private PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
+    private final PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
 
 
     //finds the exact angle we need to turn to face the powershots
@@ -72,7 +77,7 @@ public class TeleOpMain extends LinearOpMode {
 
 
     //target to align with
-    private Vector2d targetPosition = new Vector2d(0, 0);
+    private final Vector2d targetPosition = new Vector2d(72, 36);
 
     //we set the target vector to -23, -36 which are the coordinates of the ring(s)
     Vector2d targetAVector = new Vector2d(-23, -36);
@@ -96,6 +101,7 @@ public class TeleOpMain extends LinearOpMode {
         return (int) cmTick;
     }
 
+    //add LUT for rpm management
     InterpLUT RPMlut = new InterpLUT()
     {{
         RPMlut.add(5, 1);
@@ -130,19 +136,8 @@ public class TeleOpMain extends LinearOpMode {
 
             //sets coeffs for PID motor 1
             shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
-            double[] coeffs = shooterMotor.getVeloCoefficients();
-            double kP = coeffs[0];
-            double kI = coeffs[1];
-            double kD = coeffs[2];
-
-            // set and get the feedforward coefficients
             shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
-            double[] ffCoeffs = shooterMotor.getFeedforwardCoefficients();
-            double kS = ffCoeffs[0];
-            double kV = ffCoeffs[1];
-
             linearSlide.setPositionCoefficient(0.05);
-            double kP1 = linearSlide.getPositionCoefficient();
 
         //sets powers (temporary)
         motorVel = 0.0;
@@ -185,9 +180,6 @@ public class TeleOpMain extends LinearOpMode {
             telemetry.addData("x", poseEstimate.getX());
             telemetry.addData("y", poseEstimate.getY());
             telemetry.addData("heading", poseEstimate.getHeading());
-            telemetry.addData("coeffs", coeffs);
-            telemetry.addData("ffcoeffs", ffCoeffs);
-            telemetry.addData("slideKP1", kP1);
             telemetry.update();
 
              // Declare a drive direction
@@ -222,17 +214,12 @@ public class TeleOpMain extends LinearOpMode {
 
                     if (gamepad1.x) {
                         currentState = ALIGN_TO_POINT;
-                    }
 
-                    //right bumper is to turn on intake/shooter
-                    if (gamepad2.right_bumper) {
-
-                        intakeMotor.set(1.0);
-
-                    //left bumper turns it off
                     } else if (gamepad2.left_bumper) {
 
-                        intakeMotor.set(0.0);
+                        difference = targetPosition.minus(poseEstimate.vec());
+                        double theta = difference.angle();
+                        drive.turn(Angle.normDelta(theta - poseEstimate.getHeading()));
 
                     //dpad up to fully extend the linear slide
                     } else if (gamepad2.x) {
@@ -323,9 +310,6 @@ public class TeleOpMain extends LinearOpMode {
                         intakeMotor.set(motorVel);
                     }
 
-                    //set the motor speed based on the LUT table
-                    shooterMotor.set(RPMlut.get(Math.atan2(Math.abs(72.0 + drive.getPoseEstimate().getX()), Math.abs(-16.0 + drive.getPoseEstimate().getY()))));
-
                     break;
 
                 case ALIGN_TO_POINT:
@@ -376,8 +360,6 @@ public class TeleOpMain extends LinearOpMode {
                     fieldOverlay.strokeLine(targetPosition.getX(), targetPosition.getY(), targetPosition.getX(), poseEstimate.getY());
                     fieldOverlay.strokeLine(targetPosition.getX(), poseEstimate.getY(), poseEstimate.getX(), poseEstimate.getY());
 
-                    //set power
-                    shooterMotor.set(RPMlut.get(Math.atan2(Math.abs(72.0 + drive.getPoseEstimate().getX()), Math.abs(-16.0 + drive.getPoseEstimate().getY()))));
                     break;
 
                 //if something happens during auto, then this breaks us out of it

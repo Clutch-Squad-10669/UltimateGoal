@@ -9,6 +9,8 @@ import static org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.har
 
 public class TrajStorage {
 
+    Vector2d targetPosition = new Vector2d(72, 36);
+
     double anglePheta = 90 - (Math.atan((105 / 24)));
 
     Pose2d myPose = new Pose2d(-62, -50, Math.toRadians(0));

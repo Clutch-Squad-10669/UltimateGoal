@@ -2,13 +2,11 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName;
-import org.firstinspires.ftc.teamcode.EOCVtests.UGContourTest;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.openftc.easyopencv.OpenCvCamera;
 import org.openftc.easyopencv.OpenCvCameraFactory;
@@ -34,10 +32,6 @@ public class Start1 extends LinearOpMode {
     //create shooterMotor and intakeMotor motor objects (bare)
     Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
     Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
-    SimpleServo armServo = new SimpleServo(hardwareMap, "servo1");
-
-    //angle pheta
-    double anglePheta = 90 - (Math.atan((105 / 24)));
 
     //input the camera information, webcam info
     private static final int CAMERA_WIDTH = 320; // width  of wanted camera resolution
@@ -56,7 +50,7 @@ public class Start1 extends LinearOpMode {
     private OpenCvCamera camera;
 
     //create a state enum for our finite state machine
-    enum State {
+    public enum State {
         FOUR,
         ONE,
         ZERO,
@@ -111,7 +105,7 @@ public class Start1 extends LinearOpMode {
         FtcDashboard.getInstance().startCameraStream(camera, 10);
 
         //set current state for zero
-        UGContourTest.State state = UGContourTest.State.ZERO;
+        State state = State.ZERO;
 
         //get the height from the pipeline (FOUR, ONE, or ZERO)
         //set the state depending on the height
@@ -121,13 +115,13 @@ public class Start1 extends LinearOpMode {
             //the ring stack is often changed after the init is started, therefore this gives the last detected value
             switch (pipeline.getHeight()) {
                 case ZERO:
-                    state = UGContourTest.State.ZERO;
+                    state = State.ZERO;
                     break;
                 case ONE:
-                    state = UGContourTest.State.ONE;
+                    state = State.ONE;
                     break;
                 case FOUR:
-                    state = UGContourTest.State.FOUR;
+                    state = State.FOUR;
                     break;
             }
 

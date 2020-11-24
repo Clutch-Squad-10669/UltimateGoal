@@ -1,8 +1,8 @@
 # Team 10669 - UG 2020-2021
 
-This is the Team10669 clutch teleOP and autonomous code for UG 2020-2021. 
+## This is the Team10669 clutch teleOP and autonomous code for UG 2020-2021.
 
-More Info: https://sites.google.com/view/team10669/ultimate-goal-program?authuser=2
+**More Info:** https://sites.google.com/view/team10669/ultimate-goal-program?authuser=2
 
 If you need any help understanding this code, feel free to email us at shauryasclutch21@gmail.com, or fill out the form on our site.
 You can also ask under the "issues" tab. 

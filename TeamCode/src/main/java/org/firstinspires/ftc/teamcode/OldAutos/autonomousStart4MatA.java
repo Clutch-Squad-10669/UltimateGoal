@@ -9,8 +9,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.PoseStorage;
 
-@Config
-@Autonomous(name = "RoadRunnerAutonomous1")
+
 public class autonomousStart4MatA extends LinearOpMode
 {
     double anglePheta = 90 - (Math.atan((105/24)));

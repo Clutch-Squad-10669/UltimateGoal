@@ -11,7 +11,7 @@ package org.firstinspires.ftc.teamcode.OldAutos;
         import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
         import org.firstinspires.ftc.teamcode.PoseStorage;
 
-@Autonomous(name = "autonomousStart1MatB")
+
 public class autonomousStart1MatB extends LinearOpMode {
 
     //create shooterMotor and intakeMotor motor objects (bare)

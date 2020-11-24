@@ -12,7 +12,7 @@ import org.firstinspires.ftc.teamcode.PoseStorage;
 
 
 
-@Autonomous(name = "RoadRunnerAutonomous1A")
+
 public class autonomousStart1MatA extends LinearOpMode {
 
     double anglePheta = 90 - (Math.atan((105 / 24)));

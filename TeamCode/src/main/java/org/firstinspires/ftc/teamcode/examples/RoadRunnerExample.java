@@ -20,8 +20,6 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
 
-@Disabled
-@Autonomous(name="Roadrunnertest -v1")
 public class RoadRunnerExample extends LinearOpMode
 {
 

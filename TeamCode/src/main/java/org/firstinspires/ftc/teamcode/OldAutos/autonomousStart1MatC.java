@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.PoseStorage;
 
-@Autonomous(name = "autonomousStart1MatC")
+
 public class autonomousStart1MatC extends LinearOpMode {
 
     //create shooterMotor and intakeMotor motor objects (bare)

@@ -14,8 +14,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
-@Disabled
-@Autonomous(name = "ProgrammingGroupProject", group = "whatsup")
+
 public class ProgrammingChallenge2 extends LinearOpMode
 {
     private DcMotor frontLeft;

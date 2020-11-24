@@ -9,20 +9,20 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
-import org.openftc.easyopencv.OpenCvCamera
-import org.openftc.easyopencv.OpenCvCameraFactory
-import org.openftc.easyopencv.OpenCvCameraRotation
-import org.openftc.easyopencv.OpenCvInternalCamera2
+import org.openftc.easyopencv.*
 
 /*
    This is the Team10669 clutch autonomous code for UG 2020-2021.
    It includes a contour-based ring detector, finite state machines, and PID control for various motors
    Odometry is done through the roadrunner library @see <a href="https://learnroadrunner.com">learnroadrunner</a>
    The vision pipeline, servo control, and PID control is done through FTClib  @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
+   (new version is in kotlin, contact for older java version)
 */
+
 //declare autonomous
 @Autonomous(name = "Start1Auto")
 class Start1 : LinearOpMode() {
+
     //import traj storage (contains trajectory files - uses roadrunner)
     var trajStorage = TrajStorage()
 
@@ -31,12 +31,21 @@ class Start1 : LinearOpMode() {
     private var intakeMotor = Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE)
 
     //initialize ftc dashboard (online driver station)
-    var dashboard = FtcDashboard.getInstance()
+    var dashboard: FtcDashboard = FtcDashboard.getInstance()
     var packet = TelemetryPacket()
 
     //initialize the pipeline and camera
-    lateinit var camera: OpenCvCamera
-    lateinit var pipeline: UGContourRingPipeline
+    private lateinit var pipeline: UGContourRingPipeline
+    private lateinit var camera: OpenCvCamera
+    private var cameraMonitorViewId: Int = -1
+
+    //configure the phone camera, and webcam
+    private fun configurePhoneCamera(): OpenCvInternalCamera2 = OpenCvCameraFactory.getInstance()
+            .createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK, cameraMonitorViewId
+    )
+    private fun configureWebCam(): OpenCvWebcam = OpenCvCameraFactory.getInstance().createWebcam(
+            hardwareMap.get(WebcamName::class.java, WEBCAM_NAME), cameraMonitorViewId,
+    )
 
     //create a state enum for our finite state machine
     enum class State {
@@ -58,31 +67,26 @@ class Start1 : LinearOpMode() {
         val drive = SampleMecanumDrive(hardwareMap)
 
         //initialize the webcam and the pipeline
-        val cameraMonitorViewId = hardwareMap.appContext
-                .resources.getIdentifier(
+        cameraMonitorViewId = hardwareMap.appContext
+                .resources
+                .getIdentifier(
                         "cameraMonitorViewId",
                         "id",
-                        hardwareMap.appContext.packageName
+                        hardwareMap.appContext.packageName,
                 )
-        camera = if (USING_WEBCAM) {
-            OpenCvCameraFactory
-                    .getInstance()
-                    .createWebcam(hardwareMap.get(WebcamName::class.java, WEBCAM_NAME), cameraMonitorViewId)
-        } else {
-            OpenCvCameraFactory
-                    .getInstance()
-                    .createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK, cameraMonitorViewId)
-        }
+
+        //Configure webcam or internal camera depending on whats used
+        camera = if (USING_WEBCAM) configureWebCam() else configurePhoneCamera()
 
         //set pipelines
-        camera.setPipeline(UGContourRingPipeline(telemetry, DEBUG).also { pipeline = it })
+        camera.setPipeline(UGContourRingPipeline(telemetry, DEBUG).apply { pipeline = this })
 
         //set paramters
         UGContourRingPipeline.CAMERA_WIDTH = CAMERA_WIDTH
         UGContourRingPipeline.HORIZON = HORIZON
 
         //start streaming to driverstation
-        camera.openCameraDeviceAsync { camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT) }
+        camera.openCameraDeviceAsync {camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT)}
 
         //start streaming to ftc dash
         FtcDashboard.getInstance().startCameraStream(camera, 10.0)

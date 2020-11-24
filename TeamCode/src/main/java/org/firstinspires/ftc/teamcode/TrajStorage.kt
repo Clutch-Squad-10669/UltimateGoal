@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
+import com.arcrobotics.ftclib.util.InterpLUT
 import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import kotlin.math.atan
@@ -11,6 +12,20 @@ class TrajStorage {
     var angleTheta = 90 - atan((105 / 24).toDouble())
     var myPose = Pose2d(-62.0, -50.0, Math.toRadians(0.0))
     var drive = SampleMecanumDrive(BlocksOpModeCompanion.hardwareMap)
+
+    var lut: InterpLUT = object : InterpLUT() {
+        init {
+
+            //Adding each val with a key
+            add(5.0, 1.0)
+            add(4.1, 0.9)
+            add(3.6, 0.75)
+            add(2.7, .5)
+            add(1.1, 0.2)
+            //generating final equation
+            createLUT()
+        }
+    }
 
     //go to mat A
     var trajectoryA1Red1 = drive.trajectoryBuilder(

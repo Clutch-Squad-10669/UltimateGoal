@@ -124,6 +124,7 @@ class Start1 : LinearOpMode() {
                 drive.followTrajectory(trajStorage.trajectoryA1Red5)
                 drive.followTrajectory(trajStorage.trajectoryA1Red6)
             }
+
             State.ONE -> {
                 //add telemetry for state (testing)
                 packet.put("current state", state)
@@ -135,6 +136,7 @@ class Start1 : LinearOpMode() {
                 drive.followTrajectory(trajStorage.trajectoryB1Red5)
                 drive.followTrajectory(trajStorage.trajectoryA1Red6)
             }
+
             State.FOUR -> {
                 //add telemetry for state (testing)
                 packet.put("current state", state)
@@ -165,4 +167,5 @@ class Start1 : LinearOpMode() {
         private const val USING_WEBCAM = false // change to true if using webcam
         private const val WEBCAM_NAME = "" // insert webcam name from configuration if using webcam
     }
+
 }

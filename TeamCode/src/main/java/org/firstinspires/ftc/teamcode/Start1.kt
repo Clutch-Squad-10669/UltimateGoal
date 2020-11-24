@@ -23,7 +23,7 @@ import org.openftc.easyopencv.*
 @Autonomous(name = "Start1Auto")
 class Start1 : LinearOpMode() {
 
-    //import traj storage (contains trajectory files - uses roadrunner)
+    //import trajectory storage (contains trajectory files - uses roadrunner)
     var trajStorage = TrajStorage()
 
     //create shooterMotor and intakeMotor motor objects (bare)
@@ -55,11 +55,11 @@ class Start1 : LinearOpMode() {
     //start the op mode
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        //set runMode (velo for shooter, raw for intake)
+        //set runMode (velocity for shooter, raw for intake)
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl)
         intakeMotor.setRunMode(Motor.RunMode.RawPower)
 
-        //set coeffs + feedforward (PID)
+        //set coefficients + feedforward (PID)
         shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31)
         shooterMotor.setFeedforwardCoefficients(0.92, 0.47)
 
@@ -81,11 +81,11 @@ class Start1 : LinearOpMode() {
         //set pipelines
         camera.setPipeline(UGContourRingPipeline(telemetry, DEBUG).apply { pipeline = this })
 
-        //set paramters
+        //set parameters
         UGContourRingPipeline.CAMERA_WIDTH = CAMERA_WIDTH
         UGContourRingPipeline.HORIZON = HORIZON
 
-        //start streaming to driverstation
+        //start streaming to driver station
         camera.openCameraDeviceAsync {camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT)}
 
         //start streaming to ftc dash
@@ -117,6 +117,7 @@ class Start1 : LinearOpMode() {
                 //add telemetry for state (testing)
                 packet.put("current state", state)
                 dashboard.sendTelemetryPacket(packet)
+
                 drive.followTrajectory(trajStorage.trajectoryA1Red1)
                 drive.followTrajectory(trajStorage.trajectoryA1Red2)
                 drive.followTrajectory(trajStorage.trajectoryA1Red3)

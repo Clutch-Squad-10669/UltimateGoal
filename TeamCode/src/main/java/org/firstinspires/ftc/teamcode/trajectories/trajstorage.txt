@@ -1,0 +1,110 @@
+
+    fun createTrajectory(): ArrayList<trajectoryA1> {
+        val list = ArrayList<Trajectory>()
+        val trajectoryA1Red1 = TrajectoryBuilder(Pose2d(-62.0, -50.0, 0.0), 0.0)
+        val trajectoryA1Red2 = TrajectoryBuilder(Pose2d(0.0, -60.0, 0.0), 0.0)
+        val trajectoryA1Red3 = TrajectoryBuilder(Pose2d(-20.0, -36.0, -angleTheta), 0.0)
+        val trajectoryA1Red4 = TrajectoryBuilder(Pose2d(-60.0, -25.0, 0.0), 0.0)
+        val trajectoryA1Red5 = TrajectoryBuilder(Pose2d(-23.0, -36.0, angleTheta), 0.0)
+        val trajectoryA1Red6 = TrajectoryBuilder(Pose2d(-0.0, -60.0, 0.0), 0.0)
+
+
+
+        trajectoryA1Red1
+                .splineTo(Vector2d(0.0, -60.0), 0.0)
+        trajectoryA1Red2
+                .lineToSplineHeading(Pose2d(-20.0, -36.0, -angleTheta))
+        trajectoryA1Red3
+                .lineToSplineHeading(Pose2d(-60.0, -25.0, 0.0))
+        trajectoryA1Red4
+                .splineTo(Vector2d(-23.0, -36.0), angleTheta)
+        trajectoryA1Red5
+                .lineToSplineHeading(Pose2d(0.0, -60.0, 0.0))
+        trajectoryA1Red6
+                .splineToConstantHeading(Vector2d(10.0, -60.0), 0.0)
+
+
+
+        list.add(trajectoryA1Red1.build())
+        list.add(trajectoryA1Red2.build())
+        list.add(trajectoryA1Red3.build())
+        list.add(trajectoryA1Red4.build())
+        list.add(trajectoryA1Red5.build())
+        list.add(trajectoryA1Red6.build())
+
+        return list
+    }
+
+     fun createTrajectory(): ArrayList<trajectoryB1> {
+        val list = ArrayList<Trajectory>()
+        val trajectoryB1Red1 = TrajectoryBuilder(Pose2d(-62.0, -50.0, 0.0), 0.0)
+        val trajectoryB1Red2 = TrajectoryBuilder(Pose2d(34.0, -35.0, 0.0), 0.0)
+        val trajectoryB1Red3 = TrajectoryBuilder(Pose2d(-20.0, -36.0, -angleTheta), 0.0)
+        val trajectoryB1Red4 = TrajectoryBuilder(Pose2d(-60.0, -25.0, 0.0), 0.0)
+        val trajectoryB1Red5 = TrajectoryBuilder(Pose2d(-23.0, -36.0, angleTheta), 0.0)
+        val trajectoryB1Red6 = TrajectoryBuilder(Pose2d(34.0, -35.0, 0.0), 0.0)
+
+
+
+        trajectoryB1Red1
+                .splineTo(Vector2d(34.0, -35.0), 0.0)
+        trajectoryB1Red2
+                .lineToSplineHeading(Pose2d(-20.0, -36.0, -angleTheta))
+        trajectoryB1Red3
+                .lineToSplineHeading(Pose2d(-60.0, -25.0, 0.0))
+        trajectoryB1Red4
+                .splineTo(Vector2d(-23.0, -36.0), angleTheta)
+        trajectoryB1Red5
+                .lineToSplineHeading(Pose2d(34.0, -35.0, 0.0))
+        trajectoryB1Red6
+                .splineToConstantHeading(Vector2d(10.0, -60.0), 0.0)
+
+
+
+        list.add(trajectoryB1Red1.build())
+        list.add(trajectoryB1Red2.build())
+        list.add(trajectoryB1Red3.build())
+        list.add(trajectoryB1Red4.build())
+        list.add(trajectoryB1Red5.build())
+        list.add(trajectoryB1Red6.build())
+
+        return list
+    }
+
+    fun createTrajectory(): ArrayList<trajectoryC1> {
+        val list = ArrayList<Trajectory>()
+        val trajectoryC1Red1 = TrajectoryBuilder(Pose2d(-62.0, -50.0, 0.0), 0.0)
+        val trajectoryC1Red2 = TrajectoryBuilder(Pose2d(52.0, -60.0, 0.0), 0.0)
+        val trajectoryC1Red3 = TrajectoryBuilder(Pose2d(-20.0, -36.0, -angleTheta), 0.0)
+        val trajectoryC1Red4 = TrajectoryBuilder(Pose2d(-60.0, -25.0, 0.0), 0.0)
+        val trajectoryC1Red5 = TrajectoryBuilder(Pose2d(-23.0, -36.0, angleTheta), 0.0)
+        val trajectoryC1Red6 = TrajectoryBuilder(Pose2d(54.0, -60.0, 0.0), 0.0)
+
+
+
+        trajectoryC1Red1
+                .splineTo(Vector2d(52.0, -60.0), 0.0)
+        trajectoryC1Red2
+                .lineToSplineHeading(Pose2d(-20.0, -36.0, -angleTheta))
+        trajectoryC1Red3
+                .lineToSplineHeading(Pose2d(-60.0, -25.0, 0.0))
+        trajectoryC1Red4
+                .splineTo(Vector2d(-23.0, -36.0), angleTheta)
+        trajectoryC1Red5
+                .lineToSplineHeading(Pose2d(54.0, -60.0, 0.0))
+        trajectoryC1Red6
+                .splineToConstantHeading(Vector2d(10.0, -60.0), 0.0)
+
+
+
+        list.add(trajectoryC1Red1.build())
+        list.add(trajectoryC1Red2.build())
+        list.add(trajectoryC1Red3.build())
+        list.add(trajectoryC1Red4.build())
+        list.add(trajectoryC1Red5.build())
+        list.add(trajectoryC1Red6.build())
+
+        return list
+    }
+
+

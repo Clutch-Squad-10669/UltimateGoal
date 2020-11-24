@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -16,7 +15,7 @@ import org.openftc.easyopencv.OpenCvInternalCamera2;
 import static com.arcrobotics.ftclib.vision.UGContourRingPipeline.Config;
 
 /*
-    This is the Team10669 clutch teleOP code for UG 2020-2021.
+    This is the Team10669 clutch autonomous code for UG 2020-2021.
     It includes a contour-based ring detector, finite state machines, and PID control for various motors
     Odometry is done through the roadrunner library @see <a href="https://learnroadrunner.com">learnroadrunner</a>
     The vision pipeline, servo control, and PID control is done through FTClib  @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
@@ -30,8 +29,8 @@ public class Start1 extends LinearOpMode {
     TrajStorage trajStorage = new TrajStorage();
 
     //create shooterMotor and intakeMotor motor objects (bare)
-    Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
-    Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
+    //Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
+    //Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
 
     //input the camera information, webcam info
     private static final int CAMERA_WIDTH = 320; // width  of wanted camera resolution
@@ -53,14 +52,14 @@ public class Start1 extends LinearOpMode {
     public enum State {
         FOUR,
         ONE,
-        ZERO,
-        FINAL
+        ZERO
     }
 
     //start the op mode
     @Override
     public void runOpMode() throws InterruptedException {
 
+        /*
         //set runMode (velo for shooter, raw for intake)
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
         intakeMotor.setRunMode(Motor.RunMode.RawPower);
@@ -69,6 +68,7 @@ public class Start1 extends LinearOpMode {
         shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
         shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
 
+         */
         //hardwareMap
         SampleMecanumDrive drive = new SampleMecanumDrive(hardwareMap);
 
@@ -132,8 +132,8 @@ public class Start1 extends LinearOpMode {
         if (isStopRequested()) return;
 
         //sets powers
-        shooterMotor.set(1.0);
-        intakeMotor.set(1.0);
+        //shooterMotor.set(1.0);
+        //intakeMotor.set(1.0);
 
         //we are going to run a specific op mode depending on the state detected
         switch (state) {
@@ -182,11 +182,11 @@ public class Start1 extends LinearOpMode {
         }
 
         //write end position to class for teleOp
-        PoseStorage.currentPose = drive.getPoseEstimate();
+        //PoseStorage.currentPose = drive.getPoseEstimate();
 
         //sets powers (off))
-        shooterMotor.set(0.0);
-        intakeMotor.set(0.0);
+        //shooterMotor.set(0.0);
+        //intakeMotor.set(0.0);
 
 
     }

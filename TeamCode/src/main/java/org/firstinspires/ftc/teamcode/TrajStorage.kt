@@ -2,9 +2,12 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
+import com.acmerobotics.roadrunner.trajectory.Trajectory
+import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.arcrobotics.ftclib.util.InterpLUT
 import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.trajectories.TrajectoryGen1
 import kotlin.math.atan
 
 class TrajStorage {

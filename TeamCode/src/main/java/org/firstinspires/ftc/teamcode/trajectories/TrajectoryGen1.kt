@@ -6,6 +6,7 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder
 import com.acmerobotics.roadrunner.trajectory.constraints.DriveConstraints
 import com.acmerobotics.roadrunner.trajectory.constraints.MecanumConstraints
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import java.lang.Math.atan
 
 object TrajectoryGen1 {
@@ -17,10 +18,10 @@ object TrajectoryGen1 {
     // Remember to set your track width to an estimate of your actual bot to get accurate trajectory profile duration!
     private const val trackWidth = 16.0
 
-    private val combinedConstraints = MecanumConstraints(driveConstraints, trackWidth)
+    val combinedConstraints = MecanumConstraints(driveConstraints, trackWidth)
 
     fun createTrajectory(): ArrayList<Trajectory> {
-        val list = ArrayList<Trajectory>()
+        val A1 = ArrayList<Trajectory>()
         val trajectoryA1Red1 = TrajectoryBuilder(Pose2d(-62.0, -50.0, 0.0), 0.0, combinedConstraints)
         val trajectoryA1Red2 = TrajectoryBuilder(Pose2d(0.0, -60.0, 0.0), 0.0, combinedConstraints)
         val trajectoryA1Red3 = TrajectoryBuilder(Pose2d(-20.0, -36.0, -angleTheta), 0.0, combinedConstraints)
@@ -45,16 +46,25 @@ object TrajectoryGen1 {
 
 
 
-        list.add(trajectoryA1Red1.build())
-        list.add(trajectoryA1Red2.build())
-        list.add(trajectoryA1Red3.build())
-        list.add(trajectoryA1Red4.build())
-        list.add(trajectoryA1Red5.build())
-        list.add(trajectoryA1Red6.build())
+        A1.add(trajectoryA1Red1.build())
+        A1.add(trajectoryA1Red2.build())
+        A1.add(trajectoryA1Red3.build())
+        A1.add(trajectoryA1Red4.build())
+        A1.add(trajectoryA1Red5.build())
+        A1.add(trajectoryA1Red6.build())
 
-        return list
+        return A1
     }
 
+
+
+    fun runTraj(trajectories: ArrayList<Trajectory>, drive: SampleMecanumDrive) {
+        if (trajectories.isNotEmpty()) {
+            for (trajectory in trajectories) {
+                drive.followTrajectory(trajectory)
+            }
+        }
+    }
 
 }
 

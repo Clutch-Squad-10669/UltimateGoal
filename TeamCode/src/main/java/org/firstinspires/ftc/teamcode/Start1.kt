@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
+import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline.Height
@@ -117,6 +118,7 @@ class Start1 : LinearOpMode() {
                 //add telemetry for state (testing)
                 packet.put("current state", state)
                 dashboard.sendTelemetryPacket(packet)
+                //runTraj(TrajectoryGen1, SampleMecanumDrive())
 
                 drive.followTrajectory(trajStorage.trajectoryA1Red1)
                 drive.followTrajectory(trajStorage.trajectoryA1Red2)

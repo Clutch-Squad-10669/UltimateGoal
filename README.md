@@ -18,6 +18,18 @@ EasyOpenCv testing is done through <a href="https://github.com/serivesmejia/EOCV
 
 ## Installation
 
+### Note: This project is still in a testing stage
+
+**Option 1: .apk Install**
+
+1. Set up <a href="https://github.com/OpenFTC/EasyOpenCV">EasyOpenCV</a> on your phone 
+
+2. Grab the latest .apk from <a href="https://github.com/Clutch-Squad-10669/UltimateGoal/releases/tag/v1.2.0-beta.1">releases</a>
+
+3. Put it on your phone, double tap to install
+
+**Option 2: Build From Source**
+
 For more detailed instructions on getting Road Runner setup in your own project, see the [Road Runner README](https://github.com/acmerobotics/road-runner#core).
 
 1. Download or clone this repo

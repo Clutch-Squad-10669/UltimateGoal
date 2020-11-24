@@ -3,7 +3,7 @@
 all: build
 
 build:
-	./gradlew build
+	./gradlew lintVitalRelease
 
 install: build TeamCode/build/outputs/apk/debug/TeamCode-debug.apk
 	${HOME}/Android/platform-tools/adb install TeamCode/build/outputs/apk/debug/TeamCode-debug.apk

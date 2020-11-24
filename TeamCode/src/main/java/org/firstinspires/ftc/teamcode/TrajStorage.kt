@@ -4,10 +4,11 @@ import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import kotlin.math.atan
 
 class TrajStorage {
-    var targetPosition = Vector2d(72.0, 36.0)
-    var anglePheta = 90 - Math.atan((105 / 24).toDouble())
+    //var targetPosition = Vector2d(72.0, 36.0)
+    var angleTheta = 90 - atan((105 / 24).toDouble())
     var myPose = Pose2d(-62.0, -50.0, Math.toRadians(0.0))
     var drive = SampleMecanumDrive(BlocksOpModeCompanion.hardwareMap)
 
@@ -20,24 +21,24 @@ class TrajStorage {
     //pick up rings on the way to the second wobble goal
     var trajectoryA1Red2 = drive.trajectoryBuilder(
             Pose2d(0.0, -60.0, Math.toRadians(0.0)))
-            .lineToSplineHeading(Pose2d(-20.0, -36.0, -anglePheta))
+            .lineToSplineHeading(Pose2d(-20.0, -36.0, -angleTheta))
             .build()
 
     //continue to the second wobble goal
     var trajectoryA1Red3 = drive.trajectoryBuilder(
-            Pose2d(-20.0, -36.0, Math.toRadians(-anglePheta)))
+            Pose2d(-20.0, -36.0, Math.toRadians(-angleTheta)))
             .lineToSplineHeading(Pose2d(-60.0, -25.0, Math.toRadians(0.0)))
             .build()
 
     //pick up wobble and aim to powershots
     var trajectoryA1Red4 = drive.trajectoryBuilder(
             Pose2d(-60.0, -25.0, Math.toRadians(0.0)))
-            .splineTo(Vector2d(-23.0, -36.0), anglePheta)
+            .splineTo(Vector2d(-23.0, -36.0), angleTheta)
             .build()
 
     //Back to mat A to drop off second one
     var trajectoryA1Red5 = drive.trajectoryBuilder(
-            Pose2d(-23.0, -36.0, Math.toRadians(anglePheta))) //.splineTo(new Vector2d(0,-60), Math.toRadians(0))
+            Pose2d(-23.0, -36.0, Math.toRadians(angleTheta))) //.splineTo(new Vector2d(0,-60), Math.toRadians(0))
             .lineToSplineHeading(Pose2d(0.0, -60.0, Math.toRadians(0.0)))
             .build()
 
@@ -55,7 +56,7 @@ class TrajStorage {
 
     //Back to mat B to drop off second one
     var trajectoryB1Red5 = drive.trajectoryBuilder(
-            Pose2d(-23.0, -36.0, Math.toRadians(anglePheta)))
+            Pose2d(-23.0, -36.0, Math.toRadians(angleTheta)))
             .lineToSplineHeading(Pose2d(34.0, -35.0, Math.toRadians(0.0)))
             .build()
 
@@ -67,7 +68,7 @@ class TrajStorage {
 
     //Back to mat C to drop off second one
     var trajectoryC1Red5 = drive.trajectoryBuilder(
-            Pose2d(-23.0, -36.0, Math.toRadians(anglePheta)))
+            Pose2d(-23.0, -36.0, Math.toRadians(angleTheta)))
             .lineToSplineHeading(Pose2d(54.0, -60.0, Math.toRadians(0.0)))
             .build()
 }

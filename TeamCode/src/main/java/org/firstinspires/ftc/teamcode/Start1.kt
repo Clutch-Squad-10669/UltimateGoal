@@ -27,16 +27,16 @@ class Start1 : LinearOpMode() {
     var trajStorage = TrajStorage()
 
     //create shooterMotor and intakeMotor motor objects (bare)
-    var shooterMotor = Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE)
-    var intakeMotor = Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE)
+    private var shooterMotor = Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE)
+    private var intakeMotor = Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE)
 
     //initialize ftc dashboard (online driver station)
     var dashboard = FtcDashboard.getInstance()
     var packet = TelemetryPacket()
 
     //initialize the pipeline and camera
-    private var pipeline: UGContourRingPipeline? = null
-    private var camera: OpenCvCamera? = null
+    lateinit var camera: OpenCvCamera
+    lateinit var pipeline: UGContourRingPipeline
 
     //create a state enum for our finite state machine
     enum class State {
@@ -46,8 +46,6 @@ class Start1 : LinearOpMode() {
     //start the op mode
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-
-
         //set runMode (velo for shooter, raw for intake)
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl)
         intakeMotor.setRunMode(Motor.RunMode.RawPower)
@@ -55,7 +53,6 @@ class Start1 : LinearOpMode() {
         //set coeffs + feedforward (PID)
         shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31)
         shooterMotor.setFeedforwardCoefficients(0.92, 0.47)
-
 
         //hardwareMap
         val drive = SampleMecanumDrive(hardwareMap)
@@ -78,27 +75,25 @@ class Start1 : LinearOpMode() {
         }
 
         //set pipelines
-        camera!!.setPipeline(UGContourRingPipeline(telemetry, DEBUG).also { pipeline = it })
+        camera.setPipeline(UGContourRingPipeline(telemetry, DEBUG).also { pipeline = it })
 
         //set paramters
         UGContourRingPipeline.CAMERA_WIDTH = CAMERA_WIDTH
         UGContourRingPipeline.HORIZON = HORIZON
 
         //start streaming to driverstation
-        camera!!.openCameraDeviceAsync { camera!!.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT) }
+        camera.openCameraDeviceAsync { camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT) }
 
         //start streaming to ftc dash
         FtcDashboard.getInstance().startCameraStream(camera, 10.0)
 
         //set current state for zero
         var state = State.ZERO
-
-        //get the height from the pipeline (FOUR, ONE, or ZERO)
-        //set the state depending on the height
+        //get the height from the pipeline (FOUR, ONE, or ZERO), set the state depending on the height
         while (!isStarted) {
             // ^ this is very important, it makes sure that the detector is running until the opmode is started
-            //the ring stack is often changed after the init is started, therefore this gives the last detected value
-            state = when (pipeline!!.height) {
+                // the ring stack is often changed after the init is started, therefore this gives the last detected value
+            state = when (pipeline.height) {
                 Height.ZERO -> State.ZERO
                 Height.ONE -> State.ONE
                 Height.FOUR -> State.FOUR
@@ -112,6 +107,7 @@ class Start1 : LinearOpMode() {
         //sets powers
         shooterMotor.set(1.0)
         intakeMotor.set(1.0)
+
         when (state) {
             State.ZERO -> {
                 //add telemetry for state (testing)

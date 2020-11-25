@@ -2,8 +2,6 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
-import com.acmerobotics.roadrunner.trajectory.Trajectory
-import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline.Height
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
@@ -28,8 +26,8 @@ class Start1 : LinearOpMode() {
     var trajStorage = TrajStorage()
 
     //create shooterMotor and intakeMotor motor objects (bare)
-    private var shooterMotor = Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE)
-    private var intakeMotor = Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE)
+    //private var shooterMotor = Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE)
+   // private var intakeMotor = Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE)
 
     //initialize ftc dashboard (online driver station)
     var dashboard: FtcDashboard = FtcDashboard.getInstance()
@@ -57,12 +55,12 @@ class Start1 : LinearOpMode() {
     @Throws(InterruptedException::class)
     override fun runOpMode() {
         //set runMode (velocity for shooter, raw for intake)
-        shooterMotor.setRunMode(Motor.RunMode.VelocityControl)
-        intakeMotor.setRunMode(Motor.RunMode.RawPower)
+        //shooterMotor.setRunMode(Motor.RunMode.VelocityControl)
+        //intakeMotor.setRunMode(Motor.RunMode.RawPower)
 
         //set coefficients + feedforward (PID)
-        shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31)
-        shooterMotor.setFeedforwardCoefficients(0.92, 0.47)
+       // shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31)
+       // shooterMotor.setFeedforwardCoefficients(0.92, 0.47)
 
         //hardwareMap
         val drive = SampleMecanumDrive(hardwareMap)
@@ -110,28 +108,30 @@ class Start1 : LinearOpMode() {
         if (isStopRequested) return
 
         //sets powers
-        shooterMotor.set(1.0)
-        intakeMotor.set(1.0)
+        //shooterMotor.set(1.0)
+        //intakeMotor.set(1.0)
 
         when (state) {
             State.ZERO -> {
                 //add telemetry for state (testing)
                 packet.put("current state", state)
                 dashboard.sendTelemetryPacket(packet)
-                //runTraj(TrajectoryGen1, SampleMecanumDrive())
 
-                drive.followTrajectory(trajStorage.trajectoryA1Red1)
-                drive.followTrajectory(trajStorage.trajectoryA1Red2)
-                drive.followTrajectory(trajStorage.trajectoryA1Red3)
-                drive.followTrajectory(trajStorage.trajectoryA1Red4)
-                drive.followTrajectory(trajStorage.trajectoryA1Red5)
-                drive.followTrajectory(trajStorage.trajectoryA1Red6)
+                drive.followTrajectory(trajStorage.a1red1)
+                drive.followTrajectory(trajStorage.a1red2)
+                drive.followTrajectory(trajStorage.a1red3)
+                drive.followTrajectory(trajStorage.a1red4)
+                drive.followTrajectory(trajStorage.a1red5)
+                drive.followTrajectory(trajStorage.a1red6)
+                drive.followTrajectory(trajStorage.a1red7)
+
             }
 
             State.ONE -> {
                 //add telemetry for state (testing)
                 packet.put("current state", state)
                 dashboard.sendTelemetryPacket(packet)
+
                 drive.followTrajectory(trajStorage.trajectoryB1Red1)
                 drive.followTrajectory(trajStorage.trajectoryA1Red2)
                 drive.followTrajectory(trajStorage.trajectoryA1Red3)
@@ -144,6 +144,7 @@ class Start1 : LinearOpMode() {
                 //add telemetry for state (testing)
                 packet.put("current state", state)
                 dashboard.sendTelemetryPacket(packet)
+
                 drive.followTrajectory(trajStorage.trajectoryC1Red1)
                 drive.followTrajectory(trajStorage.trajectoryA1Red2)
                 drive.followTrajectory(trajStorage.trajectoryA1Red3)
@@ -157,8 +158,8 @@ class Start1 : LinearOpMode() {
         PoseStorage.currentPose = drive.poseEstimate
 
         //sets powers (off))
-        shooterMotor.set(0.0)
-        intakeMotor.set(0.0)
+        //shooterMotor.set(0.0)
+        //intakeMotor.set(0.0)
     }
 
     companion object {

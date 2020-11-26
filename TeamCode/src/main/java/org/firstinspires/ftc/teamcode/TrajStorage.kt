@@ -10,9 +10,9 @@ import java.lang.Math.atan2
 class TrajStorage {
     
     //angles for powershots
-    var angleTheta = (90 - atan2(105.0, 24.0))
-    var angleTheta1 = (90 - atan2(105.0, 25.0))
-    var angleTheta2 = (90 - atan2(105.0, 26.0))
+    var angleTheta = (90 - atan2(72.0, -4.25))
+    var angleTheta1 = (90 - atan2(72.0, -11.75))
+    var angleTheta2 = (90 - atan2(72.0, -19.25))
 
     //start pose for most of them
     var myPose = Pose2d(-62.0, -50.0, Math.toRadians(0.0))
@@ -115,7 +115,6 @@ class TrajStorage {
                 Pose2d(-62.0, -25.0, Math.toRadians(0.0)))
                 .splineTo(Vector2d(-23.0, -36.0), angleTheta)
                 .build()
-
 
         var a1red5 = drive.trajectoryBuilder(
                 Pose2d(-23.0, -36.0, Math.toRadians(angleTheta)))

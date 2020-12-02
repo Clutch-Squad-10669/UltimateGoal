@@ -1,40 +1,26 @@
-package org.firstinspires.ftc.teamcode
+package org.firstinspires.ftc.teamcode.storage
 
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
-import com.arcrobotics.ftclib.util.InterpLUT
 import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMap
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import java.lang.Math.atan2
 
+
+
+
 class TrajStorage {
     
     //angles for powershots
-    var angleTheta = (90 - atan2(72.0, -4.25))
-    var angleTheta1 = (90 - atan2(72.0, -11.75))
-    var angleTheta2 = (90 - atan2(72.0, -19.25))
+    private var angleTheta = (90 - atan2(72.0, -4.25))
+    private var angleTheta1 = (90 - atan2(72.0, -11.75))
+    private var angleTheta2 = (90 - atan2(72.0, -19.25))
 
     //start pose for most of them
     var myPose = Pose2d(-62.0, -50.0, Math.toRadians(0.0))
 
     //just to get rid of errors 
     val drive = SampleMecanumDrive(hardwareMap)
-
-    //InterpLUT for RPM reference (ftclib)
-    var lut: InterpLUT = object : InterpLUT() {
-        init {
-
-            //Adding each val with a key
-            add(5.0, 1.0)
-            add(4.1, 0.9)
-            add(3.6, 0.75)
-            add(2.7, .5)
-            add(1.1, 0.2)
-            //generating final equation
-            createLUT()
-        }
-    }
-
 
     //general shared trajectories for the 2nd and 3rd squares
         //go to mat A

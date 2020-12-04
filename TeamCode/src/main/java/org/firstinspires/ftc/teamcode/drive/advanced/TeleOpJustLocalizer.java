@@ -8,7 +8,7 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.storage.PoseStorage;
+import org.firstinspires.ftc.teamcode.util.storage.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
 
 /**

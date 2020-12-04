@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.EOCVtests;
+package org.firstinspires.ftc.teamcode.util.EOCVtests;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;

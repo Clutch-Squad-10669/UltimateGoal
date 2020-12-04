@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.storage
+package org.firstinspires.ftc.teamcode.util.storage
 
 import com.arcrobotics.ftclib.hardware.SimpleServo
 import com.arcrobotics.ftclib.util.InterpLUT

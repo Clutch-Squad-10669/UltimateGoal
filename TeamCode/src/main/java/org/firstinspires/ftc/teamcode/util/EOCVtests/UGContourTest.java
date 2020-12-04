@@ -1,10 +1,8 @@
-package org.firstinspires.ftc.teamcode.EOCVtests;
+package org.firstinspires.ftc.teamcode.util.EOCVtests;
 
 //general imports
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket;
-import com.arcrobotics.ftclib.hardware.SimpleServo;
-import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 

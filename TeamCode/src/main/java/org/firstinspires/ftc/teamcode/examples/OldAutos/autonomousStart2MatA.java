@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.OldAutos;
+package org.firstinspires.ftc.teamcode.examples.OldAutos;
 
 import com.acmerobotics.roadrunner.geometry.Pose2d;
 import com.acmerobotics.roadrunner.geometry.Vector2d;
@@ -7,7 +7,7 @@ import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-import org.firstinspires.ftc.teamcode.storage.PoseStorage;
+import org.firstinspires.ftc.teamcode.util.storage.PoseStorage;
 
 public class autonomousStart2MatA extends LinearOpMode {
 

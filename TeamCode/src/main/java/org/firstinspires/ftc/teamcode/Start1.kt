@@ -27,18 +27,23 @@ class Start1 : LinearOpMode() {
     //import trajectory storage (contains trajectory files - uses roadrunner)
     var trajStorage = TrajStorage()
 
-    //create shooterMotor and intakeMotor motor objects (bare)
-    //private var shooterMotor = Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE)
-   // private var intakeMotor = Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE)
-
     //initialize ftc dashboard (online driver station)
     var dashboard: FtcDashboard = FtcDashboard.getInstance()
     var packet = TelemetryPacket()
 
     //initialize the pipeline and camera
     private lateinit var pipeline: UGContourRingPipeline
-    private lateinit var camera: OpenCvCamera
-    private var cameraMonitorViewId: Int = -1
+    private var camera: OpenCvCamera = if (USING_WEBCAM) configureWebCam()
+        else configurePhoneCamera()
+
+    private val cameraMonitorViewId: Int = hardwareMap
+            .appContext
+            .resources
+            .getIdentifier(
+                    "cameraMonitorViewId",
+                    "id",
+                    hardwareMap.appContext.packageName,
+            )
 
     //configure the phone camera, and webcam
     private fun configurePhoneCamera(): OpenCvInternalCamera2 = OpenCvCameraFactory.getInstance()
@@ -56,28 +61,9 @@ class Start1 : LinearOpMode() {
     //start the op mode
     @Throws(InterruptedException::class)
     override fun runOpMode() {
-        //set runMode (velocity for shooter, raw for intake)
-        //shooterMotor.setRunMode(Motor.RunMode.VelocityControl)
-        //intakeMotor.setRunMode(Motor.RunMode.RawPower)
-
-        //set coefficients + feedforward (PID)
-       // shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31)
-       // shooterMotor.setFeedforwardCoefficients(0.92, 0.47)
 
         //hardwareMap
         val drive = SampleMecanumDrive(hardwareMap)
-
-        //initialize the webcam and the pipeline
-        cameraMonitorViewId = hardwareMap.appContext
-                .resources
-                .getIdentifier(
-                        "cameraMonitorViewId",
-                        "id",
-                        hardwareMap.appContext.packageName,
-                )
-
-        //Configure webcam or internal camera depending on whats used
-        camera = if (USING_WEBCAM) configureWebCam() else configurePhoneCamera()
 
         //set pipelines
         camera.setPipeline(UGContourRingPipeline(telemetry, DEBUG).apply { pipeline = this })

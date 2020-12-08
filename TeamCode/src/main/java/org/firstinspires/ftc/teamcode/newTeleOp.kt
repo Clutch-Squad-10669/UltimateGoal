@@ -13,12 +13,14 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DigitalChannel
 import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable
 import org.firstinspires.ftc.teamcode.util.storage.PoseStorage
+import org.firstinspires.ftc.teamcode.util.storage.TrajStorage
 import org.firstinspires.ftc.teamcode.util.storage.shooterMode
 
 @TeleOp(name="shauryasinghteleop2")
 class newTeleOp : LinearOpMode() {
 
     var shooterMode = shooterMode()
+    var trajStorage = TrajStorage()
 
     //initialize ftc dashboard (online driver station)
     var dashboard: FtcDashboard = FtcDashboard.getInstance()
@@ -59,6 +61,7 @@ class newTeleOp : LinearOpMode() {
         DRIVER_CONTROL,
         AUTOMATIC_CONTROL,
         SHOOTER_CONTROL,
+        POWERSHOTS
     }
 
     private var currentState = State.DRIVER_CONTROL
@@ -124,15 +127,17 @@ class newTeleOp : LinearOpMode() {
                     )
 
                     when {
-
                         gamepad1.left_trigger > 0.5 -> {
                             difference = targetPosition.minus(poseEstimate.vec())
                             val theta: Double = difference!!.angle()
                             val traj1 = drive.trajectoryBuilder(poseEstimate)
                                     .splineTo(Vector2d(0.0, drive.poseEstimate.y), Angle.normDelta(theta - drive.poseEstimate.heading))
+                                    .addDisplacementMarker {
+                                       shooterMode.servoSetGoal()
+                                    }
                                     .build()
                             drive.followTrajectoryAsync(traj1)
-                            currentState = State.AUTOMATIC_CONTROL
+                            currentState = State.SHOOTER_CONTROL
                         }
                         gamepad1.right_trigger > 0.5 -> {
                             var under = 0
@@ -148,10 +153,13 @@ class newTeleOp : LinearOpMode() {
                         }
                         gamepad1.b -> {
                             val traj2 = drive.trajectoryBuilder(poseEstimate)
-                                    .splineTo(Vector2d(0.0, 0.0), 0.0)
+                                    .lineToSplineHeading(Pose2d(-23.0, -36.0, trajStorage.angleTheta))
+                                    .addDisplacementMarker {
+                                        shooterMode.servoSetGoal()
+                                    }
                                     .build()
                             drive.followTrajectoryAsync(traj2)
-                            currentState = State.AUTOMATIC_CONTROL
+                            currentState = State.POWERSHOTS
                         }
                         gamepad1.y -> {
                             gripperServo.turnToAngle(1.0)
@@ -220,7 +228,38 @@ class newTeleOp : LinearOpMode() {
                     }
                 }
                 State.SHOOTER_CONTROL -> {
+                    if (gamepad1.x) {
+                        drive.cancelFollowing()
+                        currentState = State.DRIVER_CONTROL
+                    }
 
+                    // If drive finishes its task, put control to the driver
+                    if (!drive.isBusy) {
+                        liftingServo1.turnToAngle(0.0)
+                        liftingServo2.turnToAngle(0.0)
+                        currentState = State.DRIVER_CONTROL
+                        break
+                    }
+                }
+                State.POWERSHOTS -> {
+                    if (gamepad1.x) {
+                        drive.cancelFollowing()
+                        currentState = State.DRIVER_CONTROL
+                    }
+
+                    // If drive finishes its task, put control to the driver
+                    if (!drive.isBusy) {
+                        flickerServo.turnToAngle(1.0)
+                        flickerServo.turnToAngle(0.0)
+                        drive.turn(trajStorage.angleTheta1)
+                        flickerServo.turnToAngle(1.0)
+                        flickerServo.turnToAngle(0.0)
+                        drive.turn(trajStorage.angleTheta2)
+                        flickerServo.turnToAngle(1.0)
+                        flickerServo.turnToAngle(0.0)
+                        currentState = State.DRIVER_CONTROL
+                        break
+                    }
                 }
             }
         }

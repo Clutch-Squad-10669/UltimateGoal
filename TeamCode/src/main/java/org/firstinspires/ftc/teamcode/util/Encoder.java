@@ -22,7 +22,7 @@ public class Encoder {
         FORWARD(1),
         REVERSE(-1);
 
-        private int multiplier;
+        private final int multiplier;
 
         Direction(int multiplier) {
             this.multiplier = multiplier;
@@ -33,8 +33,8 @@ public class Encoder {
         }
     }
 
-    private DcMotorEx motor;
-    private NanoClock clock;
+    private final DcMotorEx motor;
+    private final NanoClock clock;
 
     private Direction direction;
 

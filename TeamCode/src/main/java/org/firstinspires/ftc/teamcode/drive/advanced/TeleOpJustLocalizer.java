@@ -65,7 +65,10 @@ public class TeleOpJustLocalizer extends LinearOpMode {
     // Simple custom robot class
     // Holds the hardware for a basic mecanum drive
     class Robot {
-        private DcMotorEx leftFront, leftRear, rightRear, rightFront;
+        private final DcMotorEx leftFront;
+        private final DcMotorEx leftRear;
+        private final DcMotorEx rightRear;
+        private final DcMotorEx rightFront;
 
         public Robot(HardwareMap hardwareMap) {
             // Initialize motors

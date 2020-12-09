@@ -43,11 +43,11 @@ public class pointCenteredTeleOP extends LinearOpMode {
 
     // Declare a PIDF Controller to regulate heading
     // Use the same gains as SampleMecanumDrive's heading controller
-    private PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
+    private final PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
 
     // Declare a target vector you'd like your bot to align with
     // Can be any x/y coordinate of your choosing
-    private Vector2d targetPosition = new Vector2d(72, -12);
+    private final Vector2d targetPosition = new Vector2d(72, -12);
 
     @Override
     public void runOpMode() throws InterruptedException {

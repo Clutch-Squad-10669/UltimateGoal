@@ -32,7 +32,7 @@ class newTeleOp : LinearOpMode() {
     private var shooterMotor = Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE)
     private var intakeMotor1 = Motor(hardwareMap, "motor2", Motor.GoBILDA.RPM_312)
     private var intakeMotor2 = Motor(hardwareMap, "motor3", Motor.GoBILDA.RPM_312)
-    private var linearSlide = Motor(hardwareMap, "motor4", Motor.GoBILDA.RPM_312)
+    private var linearSlide = Motor(hardwareMap, "motor4", 288.0, 125.0) //rev hex
 
     //four servos (flicker, liftings, gripper)
     private var flickerServo = SimpleServo(hardwareMap, "servo1")
@@ -165,9 +165,7 @@ class newTeleOp : LinearOpMode() {
                             }
                         }
                         //gripper release
-                        gamepad1.a -> {
-                            gripperServo.turnToAngle(0.0)
-                        }
+                        gamepad1.a -> { gripperServo.turnToAngle(0.0) }
                         //go to point, align to powershots
                         gamepad1.b -> {
                             val traj2 = drive.trajectoryBuilder(poseEstimate)
@@ -180,9 +178,7 @@ class newTeleOp : LinearOpMode() {
                             currentState = State.POWERSHOTS
                         }
                         //grab gripper
-                        gamepad1.y -> {
-                            gripperServo.turnToAngle(1.0)
-                        }
+                        gamepad1.y -> { gripperServo.turnToAngle(1.0) }
                         //set intake to intake
                         gamepad1.right_bumper -> {
                             intakeMotor1.set(1.0)

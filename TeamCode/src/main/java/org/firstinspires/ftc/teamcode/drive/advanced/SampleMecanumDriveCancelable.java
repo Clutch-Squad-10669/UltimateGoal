@@ -28,7 +28,6 @@ import com.qualcomm.robotcore.hardware.*;
 import com.qualcomm.robotcore.hardware.configuration.typecontainers.MotorConfigurationType;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
 import org.firstinspires.ftc.teamcode.util.LynxModuleUtil;
-import org.firstinspires.ftc.teamcode.util.t265.t265localizer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -176,7 +175,7 @@ public class SampleMecanumDriveCancelable extends MecanumDrive {
         // TODO: if desired, use setLocalizer() to change the localization method
         // for instance, setLocalizer(new ThreeTrackingWheelLocalizer(...));
 
-        setLocalizer(new t265localizer(hardwareMap));
+        //setLocalizer(new T265localizerV2(hardwareMap));
     }
 
     public TrajectoryBuilder trajectoryBuilder(Pose2d startPose) {

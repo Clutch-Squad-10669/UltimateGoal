@@ -21,7 +21,7 @@ import org.openftc.easyopencv.*
 */
 
 //declare autonomous
-@Autonomous(name = "Start1Auto")
+@Autonomous(name = "Start1Auto") 
 class Start1 : LinearOpMode() {
 
     //import trajectory storage (contains trajectory files - uses roadrunner)

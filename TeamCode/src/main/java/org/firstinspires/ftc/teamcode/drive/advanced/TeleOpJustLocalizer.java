@@ -8,7 +8,6 @@ import com.qualcomm.robotcore.hardware.DcMotorEx;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.HardwareMap;
 
-import org.firstinspires.ftc.teamcode.util.storage.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.StandardTrackingWheelLocalizer;
 
 /**
@@ -65,10 +64,7 @@ public class TeleOpJustLocalizer extends LinearOpMode {
     // Simple custom robot class
     // Holds the hardware for a basic mecanum drive
     class Robot {
-        private final DcMotorEx leftFront;
-        private final DcMotorEx leftRear;
-        private final DcMotorEx rightRear;
-        private final DcMotorEx rightFront;
+        private DcMotorEx leftFront, leftRear, rightRear, rightFront;
 
         public Robot(HardwareMap hardwareMap) {
             // Initialize motors

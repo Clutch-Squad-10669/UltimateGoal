@@ -11,7 +11,6 @@ import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.util.storage.PoseStorage;
 import org.firstinspires.ftc.teamcode.drive.DriveConstants;
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.DashboardUtil;
@@ -43,11 +42,11 @@ public class TeleOpAlignWithPoint extends LinearOpMode {
 
     // Declare a PIDF Controller to regulate heading
     // Use the same gains as SampleMecanumDrive's heading controller
-    private final PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
+    private PIDFController headingController = new PIDFController(SampleMecanumDrive.HEADING_PID);
 
     // Declare a target vector you'd like your bot to align with
     // Can be any x/y coordinate of your choosing
-    private final Vector2d targetPosition = new Vector2d(0, 0);
+    private Vector2d targetPosition = new Vector2d(0, 0);
 
     @Override
     public void runOpMode() throws InterruptedException {

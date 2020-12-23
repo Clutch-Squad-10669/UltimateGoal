@@ -47,8 +47,7 @@ public class TwoWheelTrackingLocalizer extends TwoTrackingWheelLocalizer {
     // Parallel/Perpendicular to the forward axis
     // Parallel wheel is parallel to the forward axis
     // Perpendicular is perpendicular to the forward axis
-    private final Encoder parallelEncoder;
-    private final Encoder perpendicularEncoder;
+    private Encoder parallelEncoder, perpendicularEncoder;
 
     private SampleMecanumDrive drive;
 

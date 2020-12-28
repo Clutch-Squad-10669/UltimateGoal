@@ -6,9 +6,6 @@ import org.firstinspires.ftc.robotcore.external.BlocksOpModeCompanion.hardwareMa
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
 import java.lang.Math.atan2
 
-
-
-
 class TrajStorage {
     
     //angles for powershots

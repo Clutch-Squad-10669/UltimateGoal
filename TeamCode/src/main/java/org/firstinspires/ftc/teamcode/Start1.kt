@@ -31,7 +31,7 @@ class Start1 : LinearOpMode() {
     var dashboard: FtcDashboard = FtcDashboard.getInstance()
     var packet = TelemetryPacket()
 
-    //initialize the pipeline and camera
+    //initialize the pipeline and  camera
     private lateinit var pipeline: UGContourRingPipeline
     private var camera: OpenCvCamera = if (USING_WEBCAM) configureWebCam()
         else configurePhoneCamera()

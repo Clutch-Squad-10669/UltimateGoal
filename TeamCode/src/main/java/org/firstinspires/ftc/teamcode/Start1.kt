@@ -25,11 +25,11 @@ import org.openftc.easyopencv.*
 class Start1 : LinearOpMode() {
 
     //import trajectory storage (contains trajectory files - uses roadrunner)
-    var trajStorage = TrajStorage()
+    private var trajStorage = TrajStorage()
 
     //initialize ftc dashboard (online driver station)
     var dashboard: FtcDashboard = FtcDashboard.getInstance()
-    var packet = TelemetryPacket()
+    private var packet = TelemetryPacket()
 
     //initialize the pipeline and  camera
     private lateinit var pipeline: UGContourRingPipeline

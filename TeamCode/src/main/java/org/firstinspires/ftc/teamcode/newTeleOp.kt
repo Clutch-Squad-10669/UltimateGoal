@@ -22,11 +22,11 @@ class newTeleOp : LinearOpMode() {
 
     //import shooterMode and Trajectories
     var shooterMode = shooterMode()
-    var trajStorage = TrajStorage()
+    private var trajStorage = TrajStorage()
 
     //initialize ftc dashboard (online driver station)
     var dashboard: FtcDashboard = FtcDashboard.getInstance()
-    var packet = TelemetryPacket()
+    //var packet = TelemetryPacket()
 
     //1 shooter, 2 intake, 1 linear slide
     private var shooterMotor = Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE)

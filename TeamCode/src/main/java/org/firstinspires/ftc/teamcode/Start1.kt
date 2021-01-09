@@ -2,6 +2,7 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
+import com.acmerobotics.roadrunner.trajectory.Trajectory
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline
 import com.arcrobotics.ftclib.vision.UGContourRingPipeline.Height
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
@@ -58,12 +59,19 @@ class Start1 : LinearOpMode() {
         FOUR, ONE, ZERO
     }
 
+
     //start the op mode
     @Throws(InterruptedException::class)
     override fun runOpMode() {
 
         //hardwareMap
         val drive = SampleMecanumDrive(hardwareMap)
+
+        fun followTrajectories(vararg trajectories: Trajectory) {
+            for (trajectory in trajectories) {
+                drive.followTrajectory(trajectory)
+            }
+        }
 
         //set pipelines
         camera.setPipeline(UGContourRingPipeline(telemetry, DEBUG).apply { pipeline = this })
@@ -105,14 +113,15 @@ class Start1 : LinearOpMode() {
                 packet.put("current state", state)
                 dashboard.sendTelemetryPacket(packet)
 
-                drive.followTrajectory(trajStorage.a1red1)
-                drive.followTrajectory(trajStorage.a1red2)
-                drive.followTrajectory(trajStorage.a1red3)
-                drive.followTrajectory(trajStorage.a1red4)
-                drive.followTrajectory(trajStorage.a1red5)
-                drive.followTrajectory(trajStorage.a1red6)
-                drive.followTrajectory(trajStorage.a1red7)
-
+                followTrajectories(
+                    trajStorage.a1red1,
+                    trajStorage.a1red2,
+                    trajStorage.a1red3,
+                    trajStorage.a1red4,
+                    trajStorage.a1red5,
+                    trajStorage.a1red6,
+                    trajStorage.a1red7
+                )
             }
 
             State.ONE -> {
@@ -120,12 +129,15 @@ class Start1 : LinearOpMode() {
                 packet.put("current state", state)
                 dashboard.sendTelemetryPacket(packet)
 
-                drive.followTrajectory(trajStorage.trajectoryB1Red1)
-                drive.followTrajectory(trajStorage.trajectoryA1Red2)
-                drive.followTrajectory(trajStorage.trajectoryA1Red3)
-                drive.followTrajectory(trajStorage.trajectoryA1Red4)
-                drive.followTrajectory(trajStorage.trajectoryB1Red5)
-                drive.followTrajectory(trajStorage.trajectoryA1Red6)
+                followTrajectories(
+                    trajStorage.trajectoryB1Red1,
+                    trajStorage.trajectoryA1Red2,
+                    trajStorage.trajectoryA1Red3,
+                    trajStorage.trajectoryA1Red4,
+                    trajStorage.trajectoryB1Red5,
+                    trajStorage.trajectoryA1Red6
+
+                )
             }
 
             State.FOUR -> {
@@ -133,12 +145,15 @@ class Start1 : LinearOpMode() {
                 packet.put("current state", state)
                 dashboard.sendTelemetryPacket(packet)
 
-                drive.followTrajectory(trajStorage.trajectoryC1Red1)
-                drive.followTrajectory(trajStorage.trajectoryA1Red2)
-                drive.followTrajectory(trajStorage.trajectoryA1Red3)
-                drive.followTrajectory(trajStorage.trajectoryA1Red4)
-                drive.followTrajectory(trajStorage.trajectoryC1Red5)
-                drive.followTrajectory(trajStorage.trajectoryA1Red6)
+                followTrajectories(
+                    trajStorage.trajectoryC1Red1,
+                    trajStorage.trajectoryA1Red2,
+                    trajStorage.trajectoryA1Red3,
+                    trajStorage.trajectoryA1Red4,
+                    trajStorage.trajectoryC1Red5,
+                    trajStorage.trajectoryA1Red6
+
+                )
             }
         }
 
@@ -149,6 +164,7 @@ class Start1 : LinearOpMode() {
         //shooterMotor.set(0.0)
         //intakeMotor.set(0.0)
     }
+
 
     companion object {
         //input the camera information, webcam info

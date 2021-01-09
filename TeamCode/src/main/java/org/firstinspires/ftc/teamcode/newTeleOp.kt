@@ -13,7 +13,7 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DigitalChannel
 import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable
 import org.firstinspires.ftc.teamcode.util.storage.PoseStorage
-import org.firstinspires.ftc.teamcode.util.storage.TrajStorage
+import org.firstinspires.ftc.tleamcode.util.storage.TrajStorage
 import org.firstinspires.ftc.teamcode.util.storage.shooterMode
 
 //declare start of teleOP
@@ -146,8 +146,13 @@ class newTeleOp : LinearOpMode() {
                         gamepad1.left_trigger > 0.5 -> {
                             difference = targetPosition.minus(poseEstimate.vec())
                             val theta: Double = difference.angle()
+
+                            val x: Double
+                            if (drive.poseEstimate.x > 0){ x = 0.0 } else { x = drive.poseEstimate.x + 0.001}
+
                             val traj1 = drive.trajectoryBuilder(poseEstimate)
-                                    .splineTo(Vector2d(0.0, drive.poseEstimate.y), Angle.normDelta(theta - drive.poseEstimate.heading))
+                                    .splineTo(Vector2d(x, drive.poseEstimate.y),
+                                        Angle.normDelta(theta - drive.poseEstimate.heading))
                                     .addDisplacementMarker {
                                        shooterMode.servoSetGoal()
                                     }

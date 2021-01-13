@@ -1,14 +1,13 @@
 package org.firstinspires.ftc.teamcode.examples.OldAutos;
 
-        import com.acmerobotics.roadrunner.geometry.Pose2d;
-        import com.acmerobotics.roadrunner.geometry.Vector2d;
-        import com.acmerobotics.roadrunner.trajectory.Trajectory;
-        import com.arcrobotics.ftclib.hardware.SimpleServo;
-        import com.arcrobotics.ftclib.hardware.motors.Motor;
-        import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
-        import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
-        import org.firstinspires.ftc.teamcode.util.storage.PoseStorage;
+import com.acmerobotics.roadrunner.geometry.Pose2d;
+import com.acmerobotics.roadrunner.geometry.Vector2d;
+import com.acmerobotics.roadrunner.trajectory.Trajectory;
+import com.arcrobotics.ftclib.hardware.SimpleServo;
+import com.arcrobotics.ftclib.hardware.motors.Motor;
+import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
+import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
+import org.firstinspires.ftc.teamcode.util.storage.PoseStorage;
 
 
 public class autonomousStart1MatB extends LinearOpMode {
@@ -23,7 +22,7 @@ public class autonomousStart1MatB extends LinearOpMode {
     double anglePheta = 90 - (Math.atan((105 / 24)));
 
     @Override
-    public void runOpMode() throws InterruptedException  {
+    public void runOpMode() throws InterruptedException {
 
         //set runMode (velo for shooter, raw for intake)
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
@@ -59,31 +58,31 @@ public class autonomousStart1MatB extends LinearOpMode {
 
         //pick up rings on the way to the second wobble goal
         Trajectory trajectoryB1Red2 = drive.trajectoryBuilder(
-                new Pose2d(34.0, -35.0,  Math.toRadians(0)))
+                new Pose2d(34.0, -35.0, Math.toRadians(0)))
                 .lineToSplineHeading(new Pose2d(-20.0, -36.0, -anglePheta))
                 .build();
 
         //continue to the second wobble goal
         Trajectory trajectoryB1Red3 = drive.trajectoryBuilder(
-                new Pose2d(-20.0, -36.0,  Math.toRadians(-anglePheta)))
+                new Pose2d(-20.0, -36.0, Math.toRadians(-anglePheta)))
                 .lineToSplineHeading(new Pose2d(-60.0, -25.0, Math.toRadians(0)))
                 .build();
 
         //pick up wobble and aim to powershots
         Trajectory trajectoryB1Red4 = drive.trajectoryBuilder(
-                new Pose2d(-60.0, -25.0,  Math.toRadians(0)))
+                new Pose2d(-60.0, -25.0, Math.toRadians(0)))
                 .splineTo(new Vector2d(-23.0, -36.0), anglePheta)
                 .build();
 
         //Back to mat B to drop off second one
         Trajectory trajectoryB1Red5 = drive.trajectoryBuilder(
-                new Pose2d(-23.0, -36.0,  Math.toRadians(anglePheta)))
+                new Pose2d(-23.0, -36.0, Math.toRadians(anglePheta)))
                 .lineToSplineHeading(new Pose2d(34.0, -35.0, Math.toRadians(0)))
                 .build();
 
         //Park on line
         Trajectory trajectoryB1Red6 = drive.trajectoryBuilder(
-                new Pose2d(34.0, -35.0,  Math.toRadians(0)))
+                new Pose2d(34.0, -35.0, Math.toRadians(0)))
                 .splineToConstantHeading(new Vector2d(10.0, -60.0), 0.0)
                 .build();
 

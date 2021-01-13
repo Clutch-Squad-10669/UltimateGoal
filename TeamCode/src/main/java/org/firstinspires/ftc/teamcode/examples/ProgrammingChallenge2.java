@@ -2,11 +2,8 @@ package org.firstinspires.ftc.teamcode.examples;
 
 import com.qualcomm.hardware.bosch.BNO055IMU;
 import com.qualcomm.hardware.bosch.JustLoggingAccelerationIntegrator;
-import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
-import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
-
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesOrder;
 import org.firstinspires.ftc.robotcore.external.navigation.AxesReference;
@@ -15,8 +12,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.Orientation;
 import static com.qualcomm.robotcore.hardware.DcMotor.RunMode.STOP_AND_RESET_ENCODER;
 
 
-public class ProgrammingChallenge2 extends LinearOpMode
-{
+public class ProgrammingChallenge2 extends LinearOpMode {
     private DcMotor frontLeft;
     private DcMotor frontRight;
     private DcMotor backLeft;
@@ -150,8 +146,8 @@ public class ProgrammingChallenge2 extends LinearOpMode
         } else
             while (opModeIsActive() && getAngle() == 0) {
             }
-            while (opModeIsActive() && getAngle() < degrees) {
-            }
+        while (opModeIsActive() && getAngle() < degrees) {
+        }
 
         frontLeft.setPower(0);
         frontRight.setPower(0);
@@ -205,21 +201,21 @@ public class ProgrammingChallenge2 extends LinearOpMode
         imu.initialize(parameters);
 
         //wait for start
-                waitForStart();
+        waitForStart();
 
-                //show that its running
-                telemetry.addData("Mode", "running...");
-                telemetry.update();
+        //show that its running
+        telemetry.addData("Mode", "running...");
+        telemetry.update();
 
-                MecanumEncoder(.5, 0,  50);
-                MecanumEncoder(.5, 75, 0);
-                MecanumEncoder(.5, -5, 0);
-                MecanumEncoder(.5, 0, -200);
-                MecanumEncoder(.5, 5, 0);
-                MecanumEncoder(.5, -5, 0);
-                MecanumEncoder(.5, 0,200);
-                MecanumEncoder(.5, 5, 0);
-                //hello this is a test
+        MecanumEncoder(.5, 0, 50);
+        MecanumEncoder(.5, 75, 0);
+        MecanumEncoder(.5, -5, 0);
+        MecanumEncoder(.5, 0, -200);
+        MecanumEncoder(.5, 5, 0);
+        MecanumEncoder(.5, -5, 0);
+        MecanumEncoder(.5, 0, 200);
+        MecanumEncoder(.5, 5, 0);
+        //hello this is a test
 
     }
 

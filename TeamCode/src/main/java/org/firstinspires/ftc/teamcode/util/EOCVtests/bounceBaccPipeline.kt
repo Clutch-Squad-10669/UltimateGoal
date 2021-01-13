@@ -6,18 +6,24 @@ import org.firstinspires.ftc.robotcore.external.Telemetry
 import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvPipeline
-import java.util.*
-import kotlin.collections.ArrayList
 
 
 class bounceBaccPipeline(
     private val telemetry: Telemetry? = null,
     var debug: Boolean = false,
-    ): OpenCvPipeline() {
+): OpenCvPipeline() {
+    /** variable to store the calculated height of the stack **/
+    var height: Height
+        private set
 
     /** variables that will be reused for calculations **/
     private var mat: Mat
     private var ret: Mat
+
+    /** enum class for Height of the stone **/
+    enum class Height {
+        ZERO, ONE, FOUR
+    }
 
     /** companion object to store all static variables needed **/
     companion object Config {
@@ -37,12 +43,16 @@ class bounceBaccPipeline(
         /** algorithmically calculated minimum width for width check based on camera width **/
         val MIN_WIDTH
             get() = (50.0 / 320.0) * CAMERA_WIDTH
+
+        /** if the calculated aspect ratio is greater then this, height is 4, otherwise its 1 **/
+        const val BOUND_RATIO = 0.7
     }
 
     /**
      * default init call, body of constructors
      */
     init {
+        height = Height.ZERO
         ret = Mat()
         mat = Mat()
     }
@@ -114,6 +124,29 @@ class bounceBaccPipeline(
 
             if (debug) telemetry?.addData("Vision: maxW", maxWidth)
 
+            /** checking if widest width is greater than equal to minimum width
+             * using Kotlin if expression (Java ternary) to set height variable
+             *
+             * height = maxWidth >= MIN_WIDTH ? aspectRatio > BOUND_RATIO ? FOUR : ONE : ZERO
+             **/
+            height = if (maxWidth >= MIN_WIDTH) {
+                val aspectRatio: Double = maxRect.height.toDouble() / maxRect.width.toDouble()
+
+                if(debug) telemetry?.addData("Vision: Aspect Ratio", aspectRatio)
+
+                /** checks if aspectRatio is greater than BOUND_RATIO
+                 * to determine whether stack is ONE or FOUR
+                 */
+                if (aspectRatio > BOUND_RATIO)
+                    Height.FOUR // height variable is now FOUR
+                else
+                    Height.ONE // height variable is now ONE
+            } else {
+                Height.ZERO // height variable is now ZERO
+            }
+
+            if (debug) telemetry?.addData("Vision: Height", height)
+
             // releasing all mats after use
             mat.release()
             mask.release()
@@ -130,13 +163,14 @@ class bounceBaccPipeline(
         return ret
     }
 
-    public fun getRectCenter(): Vector2d {
+    fun getRectCenter(): Vector2d {
         val rect = Imgproc.boundingRect(ret)
-        val center = Vector2d(((rect.x + rect.width)/2).toDouble(), ((rect.y + rect.width)/2).toDouble())
+        val center = Vector2d(((rect.x + rect.width) / 2).toDouble(), ((rect.y + rect.width) / 2).toDouble())
 
         return center
     }
-    public fun getRectWidth(): Int {
+
+    fun getRectWidth(): Int {
         val rect = Imgproc.boundingRect(ret)
         val width = rect.width
         return width

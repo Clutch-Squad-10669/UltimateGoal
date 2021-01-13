@@ -2,7 +2,6 @@ package org.firstinspires.ftc.teamcode.util;
 
 import com.qualcomm.hardware.lynx.LynxModule;
 import com.qualcomm.robotcore.hardware.HardwareMap;
-
 import org.firstinspires.ftc.robotcore.internal.system.Misc;
 
 import java.util.HashMap;
@@ -63,6 +62,7 @@ public class LynxModuleUtil {
 
     /**
      * Retrieve and parse Lynx module firmware version.
+     *
      * @param module Lynx module
      * @return parsed firmware version
      */
@@ -96,6 +96,7 @@ public class LynxModuleUtil {
 
     /**
      * Ensure all of the Lynx modules attached to the robot satisfy the minimum requirement.
+     *
      * @param hardwareMap hardware map containing Lynx modules
      */
     public static void ensureMinimumFirmwareVersion(HardwareMap hardwareMap) {

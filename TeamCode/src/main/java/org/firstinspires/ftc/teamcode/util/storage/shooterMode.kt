@@ -52,7 +52,8 @@ class shooterMode {
             }
         }
 
-        val distance = sqrt((targetVectorX - drive.poseEstimate.x).pow(2) + (targetVectorY - drive.poseEstimate.y).pow(2))
+        val distance =
+            sqrt((targetVectorX - drive.poseEstimate.x).pow(2) + (targetVectorY - drive.poseEstimate.y).pow(2))
         var targetangle = anglelut.get(distance)
         shooterServo.rotateDegrees((90 - kotlin.math.atan2(72.0, -4.25))) //change to equation
     }

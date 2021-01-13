@@ -5,7 +5,6 @@ import com.acmerobotics.roadrunner.geometry.Vector2d;
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.storage.PoseStorage;
 
@@ -15,7 +14,7 @@ public class autonomousStart2MatA extends LinearOpMode {
     Motor shooterMotor = new Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE);
     Motor intakeMotor = new Motor(hardwareMap, "motor2", Motor.GoBILDA.BARE);
 
-    double anglePheta = 90 - (Math.atan((105/24)));
+    double anglePheta = 90 - (Math.atan((105 / 24)));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -24,18 +23,18 @@ public class autonomousStart2MatA extends LinearOpMode {
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
         intakeMotor.setRunMode(Motor.RunMode.RawPower);
 
-            //set coeffs
-            shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
-            double[] coeffs = shooterMotor.getVeloCoefficients();
-            double kP = coeffs[0];
-            double kI = coeffs[1];
-            double kD = coeffs[2];
+        //set coeffs
+        shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
+        double[] coeffs = shooterMotor.getVeloCoefficients();
+        double kP = coeffs[0];
+        double kI = coeffs[1];
+        double kD = coeffs[2];
 
-            // set and get the feedforward coefficients
-            shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
-            double[] ffCoeffs = shooterMotor.getFeedforwardCoefficients();
-            double kS = ffCoeffs[0];
-            double kV = ffCoeffs[1];
+        // set and get the feedforward coefficients
+        shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
+        double[] ffCoeffs = shooterMotor.getFeedforwardCoefficients();
+        double kS = ffCoeffs[0];
+        double kV = ffCoeffs[1];
 
 
         Pose2d myPose = new Pose2d(-62, -25, Math.toRadians(0));
@@ -44,14 +43,14 @@ public class autonomousStart2MatA extends LinearOpMode {
 
         Trajectory trajectoryA2Red = drive.trajectoryBuilder(
                 new Pose2d())
-                .splineTo(new Vector2d(0,-60), Math.toRadians(0))
-                .splineTo(new Vector2d(-23,-36), Math.toRadians(anglePheta))
-                .splineTo(new Vector2d(10,-36), Math.toRadians(0))
+                .splineTo(new Vector2d(0, -60), Math.toRadians(0))
+                .splineTo(new Vector2d(-23, -36), Math.toRadians(anglePheta))
+                .splineTo(new Vector2d(10, -36), Math.toRadians(0))
                 .build();
 
         waitForStart();
 
-        if(isStopRequested()) return;
+        if (isStopRequested()) return;
 
         shooterMotor.set(1.0);
         intakeMotor.set(1.0);

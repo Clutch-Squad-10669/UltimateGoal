@@ -1,7 +1,6 @@
 package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
-import com.acmerobotics.dashboard.telemetry.TelemetryPacket
 import com.acmerobotics.roadrunner.geometry.Pose2d
 import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.acmerobotics.roadrunner.util.Angle
@@ -13,11 +12,11 @@ import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DigitalChannel
 import org.firstinspires.ftc.teamcode.drive.advanced.SampleMecanumDriveCancelable
 import org.firstinspires.ftc.teamcode.util.storage.PoseStorage
-import org.firstinspires.ftc.tleamcode.util.storage.TrajStorage
+import org.firstinspires.ftc.teamcode.util.storage.TrajStorage
 import org.firstinspires.ftc.teamcode.util.storage.shooterMode
 
 //declare start of teleOP
-@TeleOp(name="shauryasinghteleop2")
+@TeleOp(name = "shauryasinghteleop2")
 class newTeleOp : LinearOpMode() {
 
     //import shooterMode and Trajectories
@@ -147,16 +146,21 @@ class newTeleOp : LinearOpMode() {
                             difference = targetPosition.minus(poseEstimate.vec())
                             val theta: Double = difference.angle()
 
-                            val x: Double
-                            if (drive.poseEstimate.x > 0){ x = 0.0 } else { x = drive.poseEstimate.x + 0.001}
+                            val x: Double = if (drive.poseEstimate.x > 0) {
+                                0.0
+                            } else {
+                                drive.poseEstimate.x + 0.001
+                            }
 
                             val traj1 = drive.trajectoryBuilder(poseEstimate)
-                                    .splineTo(Vector2d(x, drive.poseEstimate.y),
-                                        Angle.normDelta(theta - drive.poseEstimate.heading))
-                                    .addDisplacementMarker {
-                                       shooterMode.servoSetGoal()
-                                    }
-                                    .build()
+                                .splineTo(
+                                    Vector2d(x, drive.poseEstimate.y),
+                                    Angle.normDelta(theta - drive.poseEstimate.heading)
+                                )
+                                .addDisplacementMarker {
+                                    shooterMode.servoSetGoal()
+                                }
+                                .build()
                             drive.followTrajectoryAsync(traj1)
                             currentState = State.SHOOTER_CONTROL
                         }
@@ -170,20 +174,24 @@ class newTeleOp : LinearOpMode() {
                             }
                         }
                         //gripper release
-                        gamepad1.a -> { gripperServo.turnToAngle(0.0) }
+                        gamepad1.a -> {
+                            gripperServo.turnToAngle(0.0)
+                        }
                         //go to point, align to powershots
                         gamepad1.b -> {
                             val traj2 = drive.trajectoryBuilder(poseEstimate)
-                                    .lineToSplineHeading(Pose2d(-23.0, -36.0, trajStorage.angleTheta))
-                                    .addDisplacementMarker {
-                                        shooterMode.servoSetGoal()
-                                    }
-                                    .build()
+                                .lineToSplineHeading(Pose2d(-23.0, -36.0, trajStorage.angleTheta))
+                                .addDisplacementMarker {
+                                    shooterMode.servoSetGoal()
+                                }
+                                .build()
                             drive.followTrajectoryAsync(traj2)
                             currentState = State.POWERSHOTS
                         }
                         //grab gripper
-                        gamepad1.y -> { gripperServo.turnToAngle(1.0) }
+                        gamepad1.y -> {
+                            gripperServo.turnToAngle(1.0)
+                        }
                         //set intake to intake
                         gamepad1.right_bumper -> {
                             intakeMotor1.set(1.0)

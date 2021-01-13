@@ -2,16 +2,26 @@ package org.firstinspires.ftc.teamcode
 
 import com.acmerobotics.dashboard.FtcDashboard
 import com.acmerobotics.dashboard.telemetry.TelemetryPacket
+import com.acmerobotics.roadrunner.geometry.Pose2d
+import com.acmerobotics.roadrunner.geometry.Vector2d
 import com.acmerobotics.roadrunner.trajectory.Trajectory
-import com.arcrobotics.ftclib.vision.UGContourRingPipeline
-import com.arcrobotics.ftclib.vision.UGContourRingPipeline.Height
+import com.acmerobotics.roadrunner.util.Angle
+import com.arcrobotics.ftclib.hardware.SimpleServo
+import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.DigitalChannel
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
+import org.firstinspires.ftc.teamcode.util.EOCVtests.bounceBaccPipeline
+import org.firstinspires.ftc.teamcode.util.EOCVtests.distanceCenterLUT
+import org.firstinspires.ftc.teamcode.util.EOCVtests.distanceWidthLUT
 import org.firstinspires.ftc.teamcode.util.storage.PoseStorage
 import org.firstinspires.ftc.teamcode.util.storage.TrajStorage
+import org.firstinspires.ftc.teamcode.util.storage.shooterMode
 import org.openftc.easyopencv.*
+import kotlin.math.cos
+import kotlin.math.sin
 
 /*
    This is the Team10669 clutch autonomous code for UG 2020-2021.
@@ -22,41 +32,69 @@ import org.openftc.easyopencv.*
 */
 
 //declare autonomous
-@Autonomous(name = "Start1Auto") 
+@Autonomous(name = "Start1Auto")
 class Start1 : LinearOpMode() {
 
     //import trajectory storage (contains trajectory files - uses roadrunner)
     private var trajStorage = TrajStorage()
+    private var shooterMode = shooterMode()
+
+    //1 shooter, 2 intake, 1 linear slide
+    private var shooterMotor = Motor(hardwareMap, "motor1", Motor.GoBILDA.BARE)
+    private var intakeMotor1 = Motor(hardwareMap, "motor2", Motor.GoBILDA.RPM_312)
+    private var intakeMotor2 = Motor(hardwareMap, "motor3", Motor.GoBILDA.RPM_312)
+    private var linearSlide = Motor(hardwareMap, "motor4", 288.0, 125.0) //rev hex
+
+    //four servos (flicker, lifting, gripper)
+    private var flickerServo = SimpleServo(hardwareMap, "servo1")
+    private var liftingServo1 = SimpleServo(hardwareMap, "servo2")
+    private var liftingServo2 = SimpleServo(hardwareMap, "servo3")
+    private var gripperServo = SimpleServo(hardwareMap, "servo4")
+
+    //touch sensor
+    private lateinit var digitalTouch: DigitalChannel
+
+    val Double.toRadians get() = (Math.toRadians(this))
 
     //initialize ftc dashboard (online driver station)
     var dashboard: FtcDashboard = FtcDashboard.getInstance()
     private var packet = TelemetryPacket()
 
     //initialize the pipeline and  camera
-    private lateinit var pipeline: UGContourRingPipeline
+    private lateinit var pipeline: bounceBaccPipeline
     private var camera: OpenCvCamera = if (USING_WEBCAM) configureWebCam()
-        else configurePhoneCamera()
+    else configurePhoneCamera()
 
     private val cameraMonitorViewId: Int = hardwareMap
-            .appContext
-            .resources
-            .getIdentifier(
-                    "cameraMonitorViewId",
-                    "id",
-                    hardwareMap.appContext.packageName,
-            )
+        .appContext
+        .resources
+        .getIdentifier(
+            "cameraMonitorViewId",
+            "id",
+            hardwareMap.appContext.packageName,
+        )
 
     //configure the phone camera, and webcam
     private fun configurePhoneCamera(): OpenCvInternalCamera2 = OpenCvCameraFactory.getInstance()
-            .createInternalCamera2(OpenCvInternalCamera2.CameraDirection.BACK, cameraMonitorViewId
-    )
+        .createInternalCamera2(
+            OpenCvInternalCamera2.CameraDirection.BACK, cameraMonitorViewId
+        )
+
     private fun configureWebCam(): OpenCvWebcam = OpenCvCameraFactory.getInstance().createWebcam(
-            hardwareMap.get(WebcamName::class.java, WEBCAM_NAME), cameraMonitorViewId,
+        hardwareMap.get(WebcamName::class.java, WEBCAM_NAME), cameraMonitorViewId,
     )
+
+    private fun getRingInfo(): Vector2d {
+
+        val headingRing = distanceCenterLUT.get(pipeline.getRectCenter().x)
+        val distanceRing = distanceWidthLUT.get(pipeline.getRectWidth().toDouble())
+
+        return  Vector2d (headingRing, distanceRing)
+    }
 
     //create a state enum for our finite state machine
     enum class State {
-        FOUR, ONE, ZERO
+        FOUR, ONE, ZERO, BOUNCEBACC, SHOOTER_CONTROL
     }
 
 
@@ -74,14 +112,20 @@ class Start1 : LinearOpMode() {
         }
 
         //set pipelines
-        camera.setPipeline(UGContourRingPipeline(telemetry, DEBUG).apply { pipeline = this })
+        camera.setPipeline(bounceBaccPipeline(telemetry, DEBUG).apply { pipeline = this })
 
         //set parameters
-        UGContourRingPipeline.CAMERA_WIDTH = CAMERA_WIDTH
-        UGContourRingPipeline.HORIZON = HORIZON
+        bounceBaccPipeline.CAMERA_WIDTH = CAMERA_WIDTH
+        bounceBaccPipeline.HORIZON = HORIZON
 
         //start streaming to driver station
-        camera.openCameraDeviceAsync {camera.startStreaming(CAMERA_WIDTH, CAMERA_HEIGHT, OpenCvCameraRotation.UPRIGHT)}
+        camera.openCameraDeviceAsync {
+            camera.startStreaming(
+                CAMERA_WIDTH,
+                CAMERA_HEIGHT,
+                OpenCvCameraRotation.UPRIGHT
+            )
+        }
 
         //start streaming to ftc dash
         FtcDashboard.getInstance().startCameraStream(camera, 10.0)
@@ -91,15 +135,53 @@ class Start1 : LinearOpMode() {
         //get the height from the pipeline (FOUR, ONE, or ZERO), set the state depending on the height
         while (!isStarted) {
             // ^ this is very important, it makes sure that the detector is running until the opmode is started
-                // the ring stack is often changed after the init is started, therefore this gives the last detected value
+            // the ring stack is often changed after the init is started, therefore this gives the last detected value
             state = when (pipeline.height) {
-                Height.ZERO -> State.ZERO
-                Height.ONE -> State.ONE
-                Height.FOUR -> State.FOUR
+                bounceBaccPipeline.Height.ZERO -> State.ZERO
+                bounceBaccPipeline.Height.ONE -> State.ONE
+                bounceBaccPipeline.Height.FOUR -> State.FOUR
             }
         }
 
-        // the usual wait for start, as well as if stop requested
+        fun driveToRingPosition() {
+            val goToRingPosition = drive.trajectoryBuilder(
+                Pose2d(drive.poseEstimate.x, drive.poseEstimate.y, drive.poseEstimate.heading))
+                .lineToSplineHeading(Pose2d(
+                    (sin(getRingInfo().y) * getRingInfo().x),
+                    (cos(getRingInfo().y) * getRingInfo().x),
+                    (getRingInfo().y - 180.0).toRadians))
+                .build()
+            drive.followTrajectory(goToRingPosition)
+            state = State.BOUNCEBACC
+        }
+
+        fun driveToShoot() {
+            val targetPosition = Vector2d(72.0, 36.0)
+            val difference: Vector2d = targetPosition.minus(drive.poseEstimate.vec())
+            val theta: Double = difference.angle()
+            val x: Double = if (drive.poseEstimate.x > 0) {
+                0.0
+            } else {
+                drive.poseEstimate.x + 0.001
+            }
+            val traj1 = drive.trajectoryBuilder(
+                Pose2d(drive.poseEstimate.x, drive.poseEstimate.y, drive.poseEstimate.heading))
+                .splineTo(
+                    Vector2d(x, drive.poseEstimate.y),
+                    Angle.normDelta(theta - drive.poseEstimate.heading)
+                )
+                .addDisplacementMarker {
+                    shooterMode.servoSetGoal()
+                }
+                .build()
+            drive.followTrajectory(traj1)
+            state = State.SHOOTER_CONTROL
+
+        }
+
+
+
+        // the usual wait for start, as well as if stop requested 
         waitForStart()
         if (isStopRequested) return
 
@@ -122,6 +204,7 @@ class Start1 : LinearOpMode() {
                     trajStorage.a1red6,
                     trajStorage.a1red7
                 )
+
             }
 
             State.ONE -> {
@@ -154,6 +237,19 @@ class Start1 : LinearOpMode() {
                     trajStorage.trajectoryA1Red6
 
                 )
+            }
+            State.BOUNCEBACC -> {
+                if (!drive.isBusy) {
+                    driveToShoot()
+                }
+            }
+            State.SHOOTER_CONTROL -> {
+                if (!drive.isBusy) {
+                    //have shooter go down
+                    liftingServo1.turnToAngle(0.0)
+                    liftingServo2.turnToAngle(0.0)
+                    driveToRingPosition()
+                }
             }
         }
 

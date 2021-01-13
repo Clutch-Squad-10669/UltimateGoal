@@ -6,7 +6,6 @@ import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.arcrobotics.ftclib.hardware.SimpleServo;
 import com.arcrobotics.ftclib.hardware.motors.Motor;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive;
 import org.firstinspires.ftc.teamcode.util.storage.PoseStorage;
 
@@ -23,24 +22,24 @@ public class autonomousStart1MatC extends LinearOpMode {
     double anglePheta = 90 - (Math.atan((105 / 24)));
 
     @Override
-    public void runOpMode() throws InterruptedException  {
+    public void runOpMode() throws InterruptedException {
 
         //set runMode (velo for shooter, raw for intake)
         shooterMotor.setRunMode(Motor.RunMode.VelocityControl);
         intakeMotor.setRunMode(Motor.RunMode.RawPower);
 
-            //set coeffs
-            shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
-            double[] coeffs = shooterMotor.getVeloCoefficients();
-            double kP = coeffs[0];
-            double kI = coeffs[1];
-            double kD = coeffs[2];
+        //set coeffs
+        shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31);
+        double[] coeffs = shooterMotor.getVeloCoefficients();
+        double kP = coeffs[0];
+        double kI = coeffs[1];
+        double kD = coeffs[2];
 
-            // set and get the feedforward coefficients
-            shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
-            double[] ffCoeffs = shooterMotor.getFeedforwardCoefficients();
-            double kS = ffCoeffs[0];
-            double kV = ffCoeffs[1];
+        // set and get the feedforward coefficients
+        shooterMotor.setFeedforwardCoefficients(0.92, 0.47);
+        double[] ffCoeffs = shooterMotor.getFeedforwardCoefficients();
+        double kS = ffCoeffs[0];
+        double kV = ffCoeffs[1];
 
         //This tells the robot where it is on the mat to begin with
         Pose2d myPose = new Pose2d(-62, -50, Math.toRadians(0));
@@ -59,31 +58,31 @@ public class autonomousStart1MatC extends LinearOpMode {
 
         //pick up rings on the way to the second wobble goal
         Trajectory trajectoryC1Red2 = drive.trajectoryBuilder(
-                new Pose2d(52.0, -60.0,  Math.toRadians(0)))
+                new Pose2d(52.0, -60.0, Math.toRadians(0)))
                 .lineToSplineHeading(new Pose2d(-20.0, -36.0, -anglePheta))
                 .build();
 
         //continue to the second wobble goal
         Trajectory trajectoryC1Red3 = drive.trajectoryBuilder(
-                new Pose2d(-20.0, -36.0,  Math.toRadians(-anglePheta)))
+                new Pose2d(-20.0, -36.0, Math.toRadians(-anglePheta)))
                 .lineToSplineHeading(new Pose2d(-60.0, -25.0, Math.toRadians(0)))
                 .build();
 
         //pick up wobble and aim to powershots
         Trajectory trajectoryC1Red4 = drive.trajectoryBuilder(
-                new Pose2d(-60.0, -25.0,  Math.toRadians(0)))
+                new Pose2d(-60.0, -25.0, Math.toRadians(0)))
                 .splineTo(new Vector2d(-23.0, -36.0), anglePheta)
                 .build();
 
         //Back to mat C to drop off second one
         Trajectory trajectoryC1Red5 = drive.trajectoryBuilder(
-                new Pose2d(-23.0, -36.0,  Math.toRadians(anglePheta)))
+                new Pose2d(-23.0, -36.0, Math.toRadians(anglePheta)))
                 .lineToSplineHeading(new Pose2d(54.0, -60.0, Math.toRadians(0)))
                 .build();
 
         //Park on line
         Trajectory trajectoryC1Red6 = drive.trajectoryBuilder(
-                new Pose2d(54.0, -60.0,  Math.toRadians(0)))
+                new Pose2d(54.0, -60.0, Math.toRadians(0)))
                 .splineToConstantHeading(new Vector2d(10.0, -60.0), 0.0)
                 .build();
 

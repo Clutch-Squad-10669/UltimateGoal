@@ -1,13 +1,11 @@
 package org.firstinspires.ftc.teamcode.util;
 
 import androidx.annotation.Nullable;
-
 import com.acmerobotics.roadrunner.trajectory.Trajectory;
 import com.acmerobotics.roadrunner.trajectory.TrajectoryBuilder;
 import com.acmerobotics.roadrunner.trajectory.config.TrajectoryConfig;
 import com.acmerobotics.roadrunner.trajectory.config.TrajectoryConfigManager;
 import com.acmerobotics.roadrunner.trajectory.config.TrajectoryGroupConfig;
-
 import org.firstinspires.ftc.robotcore.internal.system.AppUtil;
 
 import java.io.IOException;
@@ -35,7 +33,8 @@ public class AssetsTrajectoryManager {
     /**
      * Loads a trajectory config with the given name.
      */
-    public static @Nullable TrajectoryConfig loadConfig(String name) {
+    public static @Nullable
+    TrajectoryConfig loadConfig(String name) {
         try {
             InputStream inputStream = AppUtil.getDefContext().getAssets().open(
                     "trajectory/" + name + ".yaml");
@@ -48,7 +47,8 @@ public class AssetsTrajectoryManager {
     /**
      * Loads a trajectory builder with the given name.
      */
-    public static @Nullable TrajectoryBuilder loadBuilder(String name) {
+    public static @Nullable
+    TrajectoryBuilder loadBuilder(String name) {
         TrajectoryGroupConfig groupConfig = loadGroupConfig();
         TrajectoryConfig config = loadConfig(name);
         if (groupConfig == null || config == null) {
@@ -60,7 +60,8 @@ public class AssetsTrajectoryManager {
     /**
      * Loads a trajectory with the given name.
      */
-    public static @Nullable Trajectory load(String name) {
+    public static @Nullable
+    Trajectory load(String name) {
         TrajectoryBuilder builder = loadBuilder(name);
         if (builder == null) {
             return null;

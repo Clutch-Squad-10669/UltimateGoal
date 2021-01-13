@@ -1,6 +1,5 @@
 package org.firstinspires.ftc.teamcode.examples;
 
-public class Example
-{
+public class Example {
     //Hello
 }

@@ -64,6 +64,13 @@ class Start1 : LinearOpMode() {
     private var packet = TelemetryPacket()
 
     //initialize the pipeline and  camera
+
+    /*
+    he protecc
+    he atacc
+    but most importantly
+    he bouncebacc
+     */
     private lateinit var pipeline: bounceBaccPipeline
     private var camera: OpenCvCamera = if (USING_WEBCAM) configureWebCam()
     else configurePhoneCamera()
@@ -99,7 +106,7 @@ class Start1 : LinearOpMode() {
 
     //create a state enum for our finite state machine
     enum class State {
-        FOUR, ONE, ZERO, BOUNCEBACC, SHOOTER_CONTROL
+        FOUR, ONE, ZERO, BOUNCEBACC, SHOOTER_CONTROL, RESET_DRIVE_POS
     }
 
     //start the op mode
@@ -149,6 +156,15 @@ class Start1 : LinearOpMode() {
                 .build()
             drive.followTrajectory(goToRingPosition) //follow traj
             state = State.BOUNCEBACC //change state
+        }
+
+        fun resetDrivePosition(){
+            val resetDrivePos = drive.trajectoryBuilder(
+                Pose2d(drive.poseEstimate.x, drive.poseEstimate.y, drive.poseEstimate.heading))
+                .lineToSplineHeading(Pose2d(60.0, 60.0, 0.0))
+                .build()
+            drive.followTrajectory(resetDrivePos)
+            state = State.RESET_DRIVE_POS
         }
 
         fun driveToShoot() {
@@ -243,29 +259,32 @@ class Start1 : LinearOpMode() {
             }
 
             State.BOUNCEBACC -> {
-                if (!drive.isBusy) {
+                if (!drive.isBusy && loopNumShooter < 3) {
+                    resetDrivePosition()
+                    loopNumShooter ++
+                } else {
                     driveToShoot()
                 }
             }
 
-            State.SHOOTER_CONTROL -> {
-                if (!drive.isBusy && loopNumShooter < 3) {
-
-                    //shoot, shoot, shoot
-                    var i = 0
-                    while(i < 3){
-                        flickerServo.turnToAngle(1.0)
-                        flickerServo.turnToAngle(0.0)
-                        i++
-                    }
-
-                    //have shooter go down
-                    liftingServo1.turnToAngle(0.0)
-                    liftingServo2.turnToAngle(0.0)
-                    loopNumShooter++
-
+            State.RESET_DRIVE_POS -> {
+                if (!drive.isBusy) {
                     driveToRingPosition()
                 }
+            }
+            State.SHOOTER_CONTROL -> {
+                //shoot, shoot, shoot
+                var i = 0
+                while(i < 3){
+                    flickerServo.turnToAngle(1.0)
+                    flickerServo.turnToAngle(0.0)
+                    i++
+                }
+
+                //have shooter go down
+                liftingServo1.turnToAngle(0.0)
+                liftingServo2.turnToAngle(0.0)
+                loopNumShooter++
             }
         }
 

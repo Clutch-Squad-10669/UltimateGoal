@@ -20,6 +20,8 @@ class bounceBaccPipeline(
     private var mat: Mat
     private var ret: Mat
 
+    private lateinit var lastRect: Rect
+
     /** enum class for Height of the stone **/
     enum class Height {
         ZERO, ONE, FOUR
@@ -103,6 +105,7 @@ class bounceBaccPipeline(
             }
 
             /**drawing widest bounding rectangle to ret in blue**/
+            lastRect = maxRect
             Imgproc.rectangle(ret, maxRect, Scalar(0.0, 0.0, 255.0), 2)
 
             /** drawing a red line to show the horizon (any above the horizon is not checked to be a ring stack **/
@@ -123,6 +126,7 @@ class bounceBaccPipeline(
             )
 
             if (debug) telemetry?.addData("Vision: maxW", maxWidth)
+
 
             /** checking if widest width is greater than equal to minimum width
              * using Kotlin if expression (Java ternary) to set height variable
@@ -164,16 +168,21 @@ class bounceBaccPipeline(
     }
 
     fun getRectCenter(): Vector2d {
-        val rect = Imgproc.boundingRect(ret)
-        val center = Vector2d(((rect.x + rect.width) / 2).toDouble(), ((rect.y + rect.width) / 2).toDouble())
-
-        return center
+        val rect = lastRect
+        return Vector2d(((rect.x + rect.width) / 2).toDouble(), ((rect.y + rect.width) / 2).toDouble())
     }
 
-    fun getRectWidth(): Int {
-        val rect = Imgproc.boundingRect(ret)
-        val width = rect.width
-        return width
+    fun getRectWidth(): Double {
+        return lastRect.size().width
+    }
+
+    fun getRectHeight(): Double {
+        return lastRect.size().height
+    }
+
+    fun getRectSize(): Size {
+        val size = lastRect.size()
+        return size
     }
 
 }
@@ -205,6 +214,7 @@ var distanceCenterLUT: InterpLUT = object : InterpLUT() {
         createLUT()
     }
 }
+
 
 
 

@@ -11,6 +11,7 @@ import com.arcrobotics.ftclib.hardware.SimpleServo
 import com.arcrobotics.ftclib.hardware.motors.Motor
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode
+import com.qualcomm.robotcore.hardware.DcMotor
 import com.qualcomm.robotcore.hardware.DigitalChannel
 import org.firstinspires.ftc.robotcore.external.hardware.camera.WebcamName
 import org.firstinspires.ftc.teamcode.drive.SampleMecanumDrive
@@ -26,7 +27,7 @@ import kotlin.math.max
 import kotlin.math.sin
 
 /*
-   This is the Team10669 clutch autonomous code for UG 2020-2021.
+   This is the Team10669 clutch azutonomous code for UG 2020-2021.
    It includes a contour-based ring detector, finite state machines, and PID control for various motors
    Odometry is done through the roadrunner library @see <a href="https://learnroadrunner.com">learnroadrunner</a>
    The vision pipeline, servo control, and PID control is done through FTClib  @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
@@ -55,6 +56,21 @@ class Start1 : LinearOpMode() {
 
     //touch sensor
     private lateinit var digitalTouch: DigitalChannel
+
+    //name gear ratio wheel radius and ticks for encoder cm conversion
+    private var GEAR_RATIO = 1.0 // for simulator
+    private var WHEEL_RADIUS = 1.0 // 5 cm
+    private var TICKS_PER_ROTATION = 103.6 // From NeveRest (for simulator)
+
+    //calculate cm
+    private var CM_PER_TICK = 2 * Math.PI * GEAR_RATIO * WHEEL_RADIUS / TICKS_PER_ROTATION
+
+    //calculate ticks from cm, return ticks
+    private fun cmToTicks(cm: Double): Int {
+        val cmTick = cm / CM_PER_TICK
+        return cmTick.toInt()
+    }
+
 
     //write toRadians (for rr pose)
     val Double.toRadians get() = (Math.toRadians(this))
@@ -115,6 +131,22 @@ class Start1 : LinearOpMode() {
 
         //hardwareMap
         val drive = SampleMecanumDrive(hardwareMap)
+
+        //set runmodes (PID for shooter, reg for intakes)
+        shooterMotor.setRunMode(Motor.RunMode.VelocityControl)
+        intakeMotor1.setRunMode(Motor.RunMode.RawPower)
+        intakeMotor2.setRunMode(Motor.RunMode.RawPower)
+        linearSlide.setRunMode(Motor.RunMode.PositionControl)
+
+        //set coefficients + feedforward (PID)
+        shooterMotor.setVeloCoefficients(0.05, 0.01, 0.31)
+        shooterMotor.setFeedforwardCoefficients(0.92, 0.47)
+        linearSlide.positionCoefficient = 0.05
+
+        // get a reference to our digitalTouch object.
+        digitalTouch = hardwareMap.get(DigitalChannel::class.java, "sensor_digital")
+        digitalTouch.mode = DigitalChannel.Mode.INPUT
+
 
         //trajectory follower (makes life easier)
         fun followTrajectories(vararg trajectories: Trajectory) {
@@ -202,9 +234,9 @@ class Start1 : LinearOpMode() {
         waitForStart()
         if (isStopRequested) return
 
-        //sets powers
-        //shooterMotor.set(1.0)
-        //intakeMotor.set(1.0)
+        shooterMotor.set(1.0)
+        intakeMotor1.set(1.0)
+        intakeMotor2.set(1.0)
 
         when (state) {
             State.ZERO -> {

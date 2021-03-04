@@ -27,7 +27,7 @@ import kotlin.math.max
 import kotlin.math.sin
 
 /*
-   This is the Team10669 clutch azutonomous code for UG 2020-2021.
+   This is the Team10669 clutch autonomous code for UG 2020-2021.
    It includes a contour-based ring detector, finite state machines, and PID control for various motors
    Odometry is done through the roadrunner library @see <a href="https://learnroadrunner.com">learnroadrunner</a>
    The vision pipeline, servo control, and PID control is done through FTClib  @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
@@ -86,7 +86,9 @@ class Start1 : LinearOpMode() {
     he atacc
     but most importantly
     he bouncebacc
+    -Shaurya Singh, 2020
      */
+
     private lateinit var pipeline: bounceBaccPipeline
     private var camera: OpenCvCamera = if (USING_WEBCAM) configureWebCam()
     else configurePhoneCamera()
@@ -170,7 +172,7 @@ class Start1 : LinearOpMode() {
                 OpenCvCameraRotation.UPRIGHT
             )
         }
-
+        
         //start streaming to ftc dash
         FtcDashboard.getInstance().startCameraStream(camera, 10.0)
 
@@ -230,7 +232,7 @@ class Start1 : LinearOpMode() {
             }
         }
 
-        // the usual wait for start, as well as if stop requested 
+        // the usual wait for start, as well as if stop requested
         waitForStart()
         if (isStopRequested) return
 

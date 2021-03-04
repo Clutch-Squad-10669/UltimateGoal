@@ -100,7 +100,7 @@ class newTeleOp : LinearOpMode() {
         waitForStart()
 
         if (isStopRequested) return
-
+        
         //set intakes and shooter on
         shooterMotor.set(1.0)
         intakeMotor1.set(1.0)

@@ -214,7 +214,3 @@ var distanceCenterLUT: InterpLUT = object : InterpLUT() {
         createLUT()
     }
 }
-
-
-
-

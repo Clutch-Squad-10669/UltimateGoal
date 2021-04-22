@@ -29,7 +29,7 @@ import kotlin.math.sin
 /*
    This is the Team10669 clutch autonomous code for UG 2020-2021.
    It includes a contour-based ring detector, finite state machines, and PID control for various motors
-   Odometry is done through the roadrunner library @see <a href="https://learnroadrunner.com">learnroadrunner</a>
+   Odometry is done through the roadrunner library @see <a href="hrefttps://learnroadrunner.com">learnroadrunner</a>
    The vision pipeline, servo control, and PID control is done through FTClib  @see <a href="https://docs.ftclib.org/ftclib/">FTClib</a>
    (new version is in kotlin, contact for older java version)
 */
@@ -172,7 +172,7 @@ class Start1 : LinearOpMode() {
                 OpenCvCameraRotation.UPRIGHT
             )
         }
-        
+
         //start streaming to ftc dash
         FtcDashboard.getInstance().startCameraStream(camera, 10.0)
 
@@ -261,7 +261,7 @@ class Start1 : LinearOpMode() {
             State.ONE -> {
                 //add telemetry for state (testing)
                 packet.put("current state", state)
-                dashboard.sendTelemetryPacket(packet)
+                //dashboard.sendTelemetryPacket(packet)
 
                 followTrajectories(
                     trajStorage.trajectoryB1Red1,

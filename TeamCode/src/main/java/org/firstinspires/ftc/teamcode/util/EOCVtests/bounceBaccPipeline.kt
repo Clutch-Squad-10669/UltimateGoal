@@ -7,7 +7,6 @@ import org.opencv.core.*
 import org.opencv.imgproc.Imgproc
 import org.openftc.easyopencv.OpenCvPipeline
 
-
 class bounceBaccPipeline(
     private val telemetry: Telemetry? = null,
     var debug: Boolean = false,
